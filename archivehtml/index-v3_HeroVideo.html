@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Daniel Li / 李绵泰 - 伦敦 AI 内容系统搭建者。" />
+<title>Daniel Li | AI 内容系统搭建者</title>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-transparent.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  @font-face {
+    font-family: 'Smiley Sans';
+    src: url('assets/SmileySans-Oblique.otf.woff2') format('woff2');
+    font-weight: 400; font-style: normal; font-display: swap;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #08080c;
+    --bg-2: #0e1018;
+    --surface: #14161e;
+    --surface-2: #1a1d28;
+    --border: rgba(255,255,255,0.06);
+    --border-2: rgba(255,255,255,0.10);
+    --text: #f0f2f6;
+    --text-2: #989ba8;
+    --text-3: #5c6070;
+    --accent: #4da3ff;
+    --accent-end: #00d4aa;
+    --accent-dim: rgba(77,163,255,0.12);
+    --accent-glow: rgba(77,163,255,0.24);
+    --purple: #a78bfa;
+    --serif: 'DM Serif Display', 'Smiley Sans', 'Noto Serif SC', serif;
+    --mono: 'DM Mono', monospace;
+    --sans: 'Instrument Sans', 'Noto Sans SC', sans-serif;
+    --radius: 10px;
+  }
+
+  html { scroll-behavior: smooth; background: var(--bg); }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+  /* ── Nav ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 3rem;
+    background: rgba(8,8,12,0.72);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.35s, border-color 0.35s;
+  }
+  nav.at-top { background: transparent; border-bottom-color: transparent; }
+
+  .nav-logo {
+    display: flex; align-items: center; gap: 0.6rem;
+    font-family: var(--mono); font-size: 11px;
+    color: var(--text-3); letter-spacing: 0.04em; text-decoration: none;
+  }
+  .nav-logo img { height: 32px; width: auto; }
+  .nav-links {
+    display: flex; align-items: center; gap: 2.2rem; list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+    text-transform: uppercase; text-decoration: none; color: var(--text-2);
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em;
+    text-transform: uppercase; text-decoration: none;
+    color: var(--bg); background: var(--accent);
+    padding: 0.55rem 1.2rem; border-radius: 6px;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .nav-cta:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  /* ── Hero ── */
+  .hero {
+    position: relative; min-height: 100vh; display: flex;
+    align-items: center; justify-content: center; overflow: hidden;
+  }
+
+  .hero-video-wrap {
+    position: absolute; inset: 0; z-index: 0; overflow: hidden;
+  }
+  .hero-video-wrap::after {
+    content: '';
+    position: absolute; inset: 0; z-index: 1;
+    background:
+      linear-gradient(180deg, rgba(8,8,12,0.35) 0%, rgba(8,8,12,0.55) 40%, rgba(8,8,12,0.78) 100%);
+  }
+  .hero-video-wrap::before {
+    content: '';
+    position: absolute; inset: 0; z-index: 0;
+    background: rgba(0,0,0,0.32);
+  }
+
+  .hero-video-bg {
+    position: absolute;
+    top: 50%; left: 50%;
+    min-width: 100%; min-height: 100%;
+    width: auto; height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    filter: brightness(0.65) saturate(0.85);
+  }
+
+  .hero-video-poster {
+    position: absolute; inset: 0;
+    background: url('https://img.youtube.com/vi/v2R1_mZJQbg/maxresdefault.jpg') center/cover;
+    filter: brightness(0.5) saturate(0.75);
+  }
+
+  .hero-content {
+    position: relative; z-index: 2; text-align: center;
+    max-width: 780px; padding: 2rem;
+  }
+
+  .hero-kicker {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: rgba(255,255,255,0.55);
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.7s ease forwards;
+  }
+
+  .hero-title {
+    font-family: var(--serif);
+    font-size: clamp(40px, 7vw, 80px);
+    line-height: 1.12; color: #fff;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.7s 0.1s ease forwards;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+  }
+
+  .accent-gradient {
+    background: linear-gradient(135deg, #4da3ff, #00d4aa);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent; -webkit-text-fill-color: transparent;
+    font-style: italic; display: inline-block;
+  }
+
+  .hero-sub {
+    font-size: clamp(15px, 1.6vw, 18px);
+    color: rgba(255,255,255,0.68);
+    line-height: 1.75; max-width: 540px;
+    margin: 0 auto 2.5rem;
+    animation: fadeUp 0.7s 0.2s ease forwards;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.5);
+  }
+
+  .hero-actions {
+    display: flex; align-items: center; justify-content: center;
+    flex-wrap: wrap; gap: 1rem;
+    animation: fadeUp 0.7s 0.3s ease forwards;
+  }
+
+  .btn-primary, .btn-secondary {
+    display: inline-flex; align-items: center; justify-content: center;
+    gap: 8px; min-height: 46px; border-radius: 6px;
+    font-family: var(--mono); font-size: 13px; letter-spacing: 0.05em;
+    text-decoration: none; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s, background 0.2s;
+  }
+  .btn-primary {
+    color: #08080c; background: #fff; padding: 0.9rem 1.8rem; font-weight: 600;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,255,255,0.18); }
+  .btn-secondary {
+    color: rgba(255,255,255,0.85); border: 1px solid rgba(255,255,255,0.22);
+    padding: 0.9rem 1.8rem;
+  }
+  .btn-secondary:hover { border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.06); }
+
+  .hero-scroll {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    color: rgba(255,255,255,0.4); font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    animation: fadeUp 0.7s 0.5s ease forwards, bob 2s 1s ease-in-out infinite;
+  }
+  .hero-scroll-line {
+    width: 1px; height: 40px;
+    background: linear-gradient(rgba(255,255,255,0.45), transparent);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes bob {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* ── Marquee ── */
+  .marquee-wrap {
+    border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    overflow: hidden; padding: 0.8rem 0; background: var(--bg-2);
+  }
+  .marquee-track {
+    display: flex; gap: 2.5rem; width: max-content;
+    animation: marquee 28s linear infinite;
+  }
+  .marquee-wrap:hover .marquee-track { animation-play-state: paused; }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  .marquee-item {
+    display: flex; align-items: center; gap: 1.2rem;
+    color: var(--text-3); font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap;
+  }
+  .marquee-item .dot { width: 4px; height: 4px; background: var(--accent); border-radius: 50%; }
+
+  /* ── Sections ── */
+  section {
+    max-width: 1100px; margin: 0 auto; padding: 5rem 2rem;
+  }
+  .section-label {
+    margin-bottom: 0.75rem; color: var(--accent);
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+  }
+  .section-title {
+    margin-bottom: 2.5rem; color: var(--text);
+    font-family: var(--serif); font-size: clamp(32px, 4.5vw, 54px); line-height: 1.25;
+  }
+  .section-title em { color: var(--accent); font-style: italic; }
+
+  /* ── About ── */
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 0.8fr; gap: 3rem; align-items: start;
+  }
+  .about-text p { margin-bottom: 1.25rem; color: var(--text-2); font-size: 15px; line-height: 1.85; }
+  .profile-card {
+    border: 1px solid var(--border); background: var(--surface);
+    border-radius: var(--radius); padding: 2rem; position: relative; overflow: hidden;
+  }
+  .profile-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-end), transparent);
+  }
+  .avatar {
+    width: 80px; height: 80px; border-radius: 50%; overflow: hidden;
+    border: 2px solid var(--accent); margin-bottom: 1rem;
+  }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .profile-card h3 { font-family: var(--serif); font-size: 20px; margin-bottom: 0.2rem; }
+  .role-tag {
+    color: var(--accent); font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 1rem;
+  }
+  .info-row {
+    display: flex; align-items: center; gap: 8px; padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border); color: var(--text-2); font-size: 12px;
+  }
+  .info-row:last-child { border-bottom: 0; }
+
+  /* ── System ── */
+  .system-flow {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+  }
+  .node-card {
+    padding: 1.5rem; border: 1px solid var(--border);
+    border-radius: var(--radius); background: var(--surface);
+    border-left: 2px solid var(--accent);
+    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  }
+  .node-card:hover {
+    border-color: rgba(77,163,255,0.5);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 36px -10px rgba(77,163,255,0.14);
+  }
+  .step-num {
+    display: block; font-family: var(--mono); font-size: 24px; font-weight: 700;
+    color: var(--accent); opacity: 0.7; margin-bottom: 0.5rem;
+  }
+  .node-title { font-weight: 700; font-size: 14px; margin-bottom: 0.3rem; }
+  .node-note { color: var(--text-3); font-size: 12px; line-height: 1.5; }
+
+  .system-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.5rem;
+  }
+  .stat-card {
+    padding: 1.25rem; border: 1px solid var(--border);
+    border-radius: var(--radius); background: var(--surface);
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .stat-card:hover { border-color: rgba(77,163,255,0.4); transform: translateY(-4px); }
+  .stat-card strong {
+    display: block; font-family: var(--serif); font-size: 28px; line-height: 1; margin-bottom: 0.35rem;
+  }
+  .stat-card span { color: var(--text-2); font-size: 13px; }
+
+  /* ── Work ── */
+  .projects-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem;
+  }
+  .project-card {
+    position: relative; display: block; padding: 1.75rem;
+    border: 1px solid var(--border); border-radius: var(--radius);
+    background: var(--surface); color: var(--text); text-decoration: none;
+    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  }
+  .project-card:hover {
+    border-color: rgba(77,163,255,0.5);
+    transform: translateY(-6px);
+    box-shadow: 0 16px 48px -12px rgba(77,163,255,0.18);
+  }
+  .project-card[data-flow] { cursor: pointer; }
+  .project-card:not([data-flow])::after {
+    content: '↗'; position: absolute; top: 1.25rem; right: 1.25rem;
+    color: var(--text-3); transition: color 0.2s, transform 0.2s;
+  }
+  .project-card:not([data-flow]):hover::after { color: var(--accent); transform: translate(2px, -2px); }
+  .project-num {
+    margin-bottom: 1rem; color: var(--text-3);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+  }
+  .project-card h3 { font-family: var(--serif); font-size: 20px; margin-bottom: 0.5rem; }
+  .project-card p { color: var(--text-2); font-size: 13px; line-height: 1.65; }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 1rem; }
+  .tag {
+    border: 1px solid var(--border); border-radius: 4px;
+    background: var(--bg-2); color: var(--text-3);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 0.2rem 0.55rem;
+  }
+
+  /* ── Agents ── */
+  .agents-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+  }
+  .agent-card {
+    padding: 1.5rem; border: 1px solid var(--border);
+    border-radius: var(--radius); background: var(--surface);
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .agent-card:hover {
+    border-color: rgba(77,163,255,0.45);
+    transform: translateY(-4px);
+  }
+  .agent-icon {
+    width: 40px; height: 40px; border-radius: 8px;
+    background: var(--accent-dim); color: var(--accent);
+    display: grid; place-items: center;
+    font-family: var(--mono); font-size: 18px; font-weight: 700;
+    margin-bottom: 1rem;
+  }
+  .agent-card h3 { font-weight: 700; font-size: 14px; margin-bottom: 0.4rem; }
+  .agent-card p { color: var(--text-2); font-size: 12px; line-height: 1.6; }
+
+  /* ── Contact ── */
+  .contact-inner { text-align: center; max-width: 600px; margin: 0 auto; }
+  .contact-title {
+    font-family: var(--serif); font-size: clamp(38px, 6vw, 72px);
+    line-height: 1.2; margin-bottom: 1.5rem;
+  }
+  .contact-title em { color: var(--accent); font-style: italic; }
+  .contact-sub { color: var(--text-2); font-size: 15px; line-height: 1.7; margin-bottom: 2rem; }
+  .contact-links {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem;
+    padding-top: 2rem; border-top: 1px solid var(--border);
+  }
+  .contact-link {
+    display: flex; align-items: center; gap: 8px;
+    padding: 0.6rem 1.1rem; border: 1px solid var(--border);
+    border-radius: 6px; background: var(--surface);
+    color: var(--text); text-decoration: none; font-size: 13px;
+    transition: border-color 0.2s, background 0.2s, color 0.2s;
+  }
+  .contact-link:hover { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); }
+  .contact-icon {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--accent-dim); color: var(--accent);
+    display: grid; place-items: center; font-size: 10px; font-weight: 700;
+  }
+
+  /* ── Footer ── */
+  footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 2rem; border-top: 1px solid var(--border);
+    color: var(--text-3); font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em;
+  }
+  .footer-dot { color: var(--accent); }
+
+  /* ── Flow Modal ── */
+  .flow-modal-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+    opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s;
+  }
+  .flow-modal-overlay.is-open { opacity: 1; visibility: visible; }
+  .flow-modal {
+    position: relative; width: min(800px, 90vw); max-height: 85vh; overflow-y: auto;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 2.5rem;
+  }
+  .flow-modal-close {
+    position: absolute; top: 1rem; right: 1rem;
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid var(--border); background: var(--surface-2);
+    color: var(--text-2); font-size: 18px; cursor: pointer;
+    display: grid; place-items: center;
+  }
+  .flow-modal-close:hover { border-color: var(--accent); color: var(--accent); }
+  .flow-modal h3 { font-family: var(--serif); font-size: 24px; margin-bottom: 0.5rem; }
+  .modal-flow {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.75rem; margin-top: 1.5rem;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    nav { padding: 0.85rem 1.25rem; }
+    .nav-links { display: none; }
+    .hero-title { font-size: 38px; }
+    .about-grid, .projects-grid, .agents-grid, .system-flow, .system-stats {
+      grid-template-columns: 1fr;
+    }
+    section { padding: 3.5rem 1.25rem; }
+    footer { flex-direction: column; text-align: center; gap: 0.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="navbar" class="at-top">
+  <a href="#hero" class="nav-logo">
+    <img src="assets/logo-transparent.png" alt="Daniel Li logo">
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">简介</a></li>
+    <li><a href="#system">系统</a></li>
+    <li><a href="#work">作品</a></li>
+    <li><a href="#agents">Agents</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">合作咨询</a>
+</nav>
+
+<main>
+  <!-- ════ Hero — Video Background + Dim Overlay ════ -->
+  <section id="hero" class="hero">
+    <div class="hero-video-wrap">
+      <!-- Poster image loads first, then video replaces it -->
+      <div class="hero-video-poster" id="heroPoster"></div>
+      <!--
+        VIDEO SOURCE: Replace the src below with your showreel URL.
+        Current fallback: poster image (YouTube maxresdefault) with dim overlay.
+        The poster alone already achieves the cinematic look.
+        To add video: upload to R2 (./upload-video.sh) or use a direct MP4 URL.
+      -->
+      <video
+        id="heroVideo"
+        class="hero-video-bg"
+        autoplay muted loop playsinline
+        poster="https://img.youtube.com/vi/v2R1_mZJQbg/maxresdefault.jpg"
+        style="opacity:0; transition: opacity 1s ease;"
+      >
+        <source src="" type="video/mp4">
+      </video>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-kicker">AI Content System Builder · London</div>
+      <h1 class="hero-title">
+        我不只做内容，<br>
+        <span class="accent-gradient">我做生产内容的系统</span>
+      </h1>
+      <p class="hero-sub">
+        一条生产线，从创意到交付。Brief 进，成片出——AI Agent 驱动，记忆系统复用，团队拿来就能用。
+      </p>
+      <div class="hero-actions">
+        <a href="#work" class="btn-primary">查看作品</a>
+        <a href="#contact" class="btn-secondary">联系我</a>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="hero-scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ════ Marquee ════ -->
+  <div class="marquee-wrap">
+    <div class="marquee-track" id="marqueeTrack"></div>
+  </div>
+
+  <!-- ════ About ════ -->
+  <section id="about">
+    <div class="section-label">01 — 简介</div>
+    <h2 class="section-title">不只是做内容<br><em>是建一套生产内容的系统</em></h2>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>Daniel Li / 李绵泰，常驻伦敦。华威大学硕士，杜伦大学本科。六年深耕商业视频制作与 AI 内容系统——从拍摄到交付，从单次项目到可复用生产体系。</p>
+        <p>我的不同在于系统思维。给每个内容项目搭建记忆库、配置 Agent、设审核关卡、建交付标准——创意不再是一次性的，而是可以重复、可以规模化的生产线。</p>
+        <div style="margin-top:2rem; padding-left:1rem; border-left:1px solid var(--border);">
+          <div style="margin-bottom:1rem;">
+            <div style="color:var(--purple); font-family:var(--mono); font-size:10px; letter-spacing:0.08em;">2024–2025</div>
+            <div style="font-weight:700; margin-top:0.2rem;">MA 教育领导力与管理</div>
+            <div style="color:var(--accent); font-family:var(--mono); font-size:11px; margin-top:0.15rem;">University of Warwick</div>
+          </div>
+          <div>
+            <div style="color:var(--purple); font-family:var(--mono); font-size:10px; letter-spacing:0.08em;">2021–2024</div>
+            <div style="font-weight:700; margin-top:0.2rem;">BA 商业管理</div>
+            <div style="color:var(--accent); font-family:var(--mono); font-size:11px; margin-top:0.15rem;">Durham University</div>
+          </div>
+        </div>
+      </div>
+      <aside class="profile-card">
+        <div class="avatar">
+          <img src="assets/daniel-photo-20260504.jpg" alt="Daniel Li">
+        </div>
+        <h3>Daniel Li / 李绵泰</h3>
+        <div class="role-tag">AI 内容系统搭建者</div>
+        <div class="info-row">覆盖全链路：从摄影机到 Agent，从创意到交付</div>
+        <div class="info-row">商业广告、展会、品牌影片</div>
+        <div class="info-row">AI 基建：Memory OS、Agent 编排、Prompt 工程</div>
+        <div class="info-row">语言：EN · 粤 · 普 + 4 门拉丁/日耳曼语系基础</div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ════ System ════ -->
+  <section id="system">
+    <div class="section-label">02 — 系统</div>
+    <h2 class="section-title">AI 内容<br><em>生产操作系统</em></h2>
+    <div class="system-flow">
+      <div class="node-card"><span class="step-num">01</span><div class="node-title">输入与目标</div><div class="node-note">客户 brief、市场信号、品牌规范。</div></div>
+      <div class="node-card"><span class="step-num">02</span><div class="node-title">记忆与路由</div><div class="node-note">DANIEL.md + 知识库 + 护栏，按任务自动加载。</div></div>
+      <div class="node-card"><span class="step-num">03</span><div class="node-title">预演与脚本</div><div class="node-note">分镜、镜头表、制作计划和资源配置。</div></div>
+      <div class="node-card"><span class="step-num">04</span><div class="node-title">生成与制作</div><div class="node-note">AI 素材生成 + 实拍执行 + 后期整合。</div></div>
+      <div class="node-card"><span class="step-num">05</span><div class="node-title">QA 与交付</div><div class="node-note">一致性检查、版本管理、多平台交付。</div></div>
+      <div class="node-card"><span class="step-num">06</span><div class="node-title">复盘与回写</div><div class="node-note">表现数据回写记忆库，优化下一轮策略。</div></div>
+    </div>
+    <div class="system-stats">
+      <div class="stat-card"><strong>60-70%</strong><span>更低 token 成本 — 分层记忆加载</span></div>
+      <div class="stat-card"><strong>Zero errors</strong><span>228 素材 — AI + SQL 批处理零错误</span></div>
+      <div class="stat-card"><strong>3 platforms</strong><span>一套配置 — Notion AI / Codex / Claude</span></div>
+    </div>
+  </section>
+
+  <!-- ════ Work ════ -->
+  <section id="work">
+    <div class="section-label">03 — 作品</div>
+    <h2 class="section-title">精选<br><em>案例</em></h2>
+    <div class="projects-grid">
+      <div class="project-card" data-flow="work-c1">
+        <div class="project-num">01 / 04</div>
+        <h3>AI 内容生产 OS</h3>
+        <p>分层记忆架构，跨 Notion AI、Claude、Codex 路由上下文。AI + SQL 批处理，228 个素材 2.5 小时零差错。</p>
+        <div class="tag-row"><span class="tag">Memory Architecture</span><span class="tag">Agent Config</span><span class="tag">SQL</span></div>
+      </div>
+      <a class="project-card" href="https://www.youtube.com/watch?v=EA9mTY6aH48" target="_blank" rel="noreferrer">
+        <div class="project-num">02 / 04</div>
+        <h3>Mindray Animal Medical</h3>
+        <p>全球兽医品牌端到端商业影片。创意策划、摄影、AI 辅助后期、多版本交付——全流程。</p>
+        <div class="tag-row"><span class="tag">Commercial Video</span><span class="tag">Producer</span><span class="tag">DoP</span></div>
+      </a>
+      <div class="project-card" data-flow="work-c3">
+        <div class="project-num">03 / 04</div>
+        <h3>AI 视频生产流程</h3>
+        <p>Brief → 脚本 → AI 生成 → 审核 → 剪辑 → 交付。每步有专属 Agent、护栏和人工复核。</p>
+        <div class="tag-row"><span class="tag">Runway</span><span class="tag">Kling</span><span class="tag">Veo</span></div>
+      </div>
+      <div class="project-card" data-flow="work-c4">
+        <div class="project-num">04 / 04</div>
+        <h3>DL Studio — 品牌内容引擎</h3>
+        <p>一人即团队。从 IP 定位到平台分发——把品牌内容生产变成可复用的引擎。</p>
+        <div class="tag-row"><span class="tag">Brand Content</span><span class="tag">200M+ Views</span><span class="tag">Multi-platform</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ Agents ════ -->
+  <section id="agents">
+    <div class="section-label">04 — Agent Stack</div>
+    <h2 class="section-title">我的 AI 团队<br><em>已训练，已部署</em></h2>
+    <div class="agents-grid">
+      <div class="agent-card"><div class="agent-icon">01</div><h3>记忆路由</h3><p>根据任务类型把上下文路由到正确知识库。分层加载可减少 60-70% token 成本。</p></div>
+      <div class="agent-card"><div class="agent-icon">02</div><h3>Brief 解析</h3><p>把客户 brief 转成结构化脚本、镜头表和设备计划，适合快速进入制作。</p></div>
+      <div class="agent-card"><div class="agent-icon">03</div><h3>内容适配</h3><p>把长视频拆成适配小红书、LinkedIn、TikTok、YouTube、X 的短内容与文案。</p></div>
+      <div class="agent-card"><div class="agent-icon">04</div><h3>视觉 QA</h3><p>检查 AI 生成素材的人物、产品和风格一致性，把异常标记给人工复核。</p></div>
+      <div class="agent-card"><div class="agent-icon">05</div><h3>数据分析</h3><p>分析内容表现数据，并输出带指标依据的优化建议。</p></div>
+      <div class="agent-card"><div class="agent-icon">06</div><h3>知识沉淀</h3><p>批量把原始内容转成结构化知识条目。曾在 2.5 小时内处理 228 个素材且零错误。</p></div>
+    </div>
+  </section>
+
+  <!-- ════ Contact ════ -->
+  <section id="contact">
+    <div class="section-label">05 — 联系</div>
+    <div class="contact-inner">
+      <h2 class="contact-title">把内容，<br><em>做成系统。</em></h2>
+      <p class="contact-sub">开放全职、咨询与系统搭建合作。<br><span style="color:var(--text-3);font-size:13px;">现居伦敦 · 老家深圳</span></p>
+      <div class="contact-links">
+        <a class="contact-link" href="mailto:mtli215@outlook.com"><span class="contact-icon">@</span>mtli215@outlook.com</a>
+        <a class="contact-link" href="tel:+447519744217"><span class="contact-icon">☎</span>+44 7519 744217</a>
+        <a class="contact-link" href="https://instagram.com/daniel.liccardo" target="_blank" rel="noreferrer">
+          <span class="contact-icon">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg>
+          </span>@daniel.liccardo
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════ Flow Modal ════ -->
+  <div class="flow-modal-overlay" id="flowModalOverlay" aria-hidden="true">
+    <div class="flow-modal" id="flowModal" role="dialog" aria-modal="true">
+      <button class="flow-modal-close" id="flowModalClose" aria-label="关闭">&times;</button>
+      <div id="flowModalContent"></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span>&copy; 2026 Daniel Li · 内容系统搭建者，伦敦</span>
+  <span>系统思维构建 <span class="footer-dot">·</span> Agent 流程驱动</span>
+</footer>
+
+<script>
+// ── Nav scroll effect ──
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('at-top', window.scrollY < 60);
+});
+
+// ── Hero video: load when poster is visible, hide poster once video plays ──
+const heroVideo = document.getElementById('heroVideo');
+const heroPoster = document.getElementById('heroPoster');
+
+if (heroVideo) {
+  heroVideo.addEventListener('loadeddata', () => {
+    heroVideo.style.opacity = '1';
+  });
+  heroVideo.addEventListener('playing', () => {
+    heroVideo.style.opacity = '1';
+    if (heroPoster) heroPoster.style.opacity = '0';
+  });
+  // If video fails to load, poster stays as background
+  heroVideo.addEventListener('error', () => {
+    console.log('Hero video unavailable — using poster fallback');
+  });
+}
+
+// ── Marquee ──
+const items = [
+  'AI Video', 'Agent Design', 'Producer', 'DoP', 'Notion Systems',
+  'Claude', 'Codex', 'Memory Architecture', 'Content Pipeline',
+  'Multi-modal', 'Runway', 'Kling', 'DaVinci Resolve'
+];
+const track = document.getElementById('marqueeTrack');
+[...items, ...items].forEach((item, i, arr) => {
+  const el = document.createElement('span');
+  el.className = 'marquee-item';
+  el.innerHTML = item + (i < arr.length - 1 ? '<span class="dot"></span>' : '');
+  track.appendChild(el);
+});
+
+// ── Flow charts ──
+const flowCharts = {
+  'work-c1': {
+    title: 'AI 内容生产 OS',
+    sub: '分层记忆架构，跨平台路由',
+    nodes: [
+      {zh:'记忆层',note:'DANIEL.md + 知识库 + 过往案例'},
+      {zh:'路由层',note:'按任务类型自动加载对应上下文'},
+      {zh:'护栏层',note:'品牌规范、合规检查、质量红线'},
+      {zh:'技能层',note:'专项 Agent + 工作流模板'},
+      {zh:'输出层',note:'Notion AI / Claude / Codex 多端交付'},
+      {zh:'复盘回写',note:'表现数据回写记忆库，持续优化'}
+    ]
+  },
+  'work-c3': {
+    title: 'AI 视频生产流程',
+    sub: '从 Brief 到成片的 Agent 驱动管线',
+    nodes: [
+      {zh:'Brief 解析',note:'客户需求 → 结构化脚本 + 镜头表'},
+      {zh:'预演脚本',note:'分镜、设备计划、资源配置'},
+      {zh:'AI 生成',note:'Runway / Kling / Veo 多模型生成'},
+      {zh:'一致性 QA',note:'风格、产品、信息三重审核'},
+      {zh:'剪辑精修',note:'DaVinci Resolve 精剪 + 调色 + 字幕'},
+      {zh:'多平台交付',note:'社媒短片 / 品牌正片 / 数据复盘'}
+    ]
+  },
+  'work-c4': {
+    title: 'DL Studio — 品牌内容引擎',
+    sub: '一人即团队，可复用的内容生产引擎',
+    nodes: [
+      {zh:'IP 定位',note:'品牌人格、叙事主线、视觉语言'},
+      {zh:'制作计划',note:'内容日历、资源调配、预算规划'},
+      {zh:'内容生产',note:'拍摄 + AI 生成 + 后期整合'},
+      {zh:'平台分发',note:'小红书 / LinkedIn / TikTok / YouTube / X'},
+      {zh:'数据复盘',note:'200M+ 播放，持续优化策略'}
+    ]
+  }
+};
+
+const flowModalOverlay = document.getElementById('flowModalOverlay');
+const flowModalContent = document.getElementById('flowModalContent');
+const flowModalClose = document.getElementById('flowModalClose');
+
+function openFlowChart(cardId) {
+  const data = flowCharts[cardId];
+  if (!data) return;
+  let html = '<h3>' + data.title + '</h3><p style="color:var(--text-2);font-size:13px;margin-bottom:1rem;">' + data.sub + '</p><div class="modal-flow">';
+  data.nodes.forEach((node, i) => {
+    html += '<div class="node-card"><span class="step-num">' + String(i+1).padStart(2,'0') + '</span><div class="node-title">' + node.zh + '</div><div class="node-note">' + node.note + '</div></div>';
+  });
+  html += '</div>';
+  flowModalContent.innerHTML = html;
+  flowModalOverlay.classList.add('is-open');
+  flowModalOverlay.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeFlowChart() {
+  flowModalOverlay.classList.remove('is-open');
+  flowModalOverlay.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+flowModalClose.addEventListener('click', closeFlowChart);
+flowModalOverlay.addEventListener('click', e => { if (e.target === flowModalOverlay) closeFlowChart(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeFlowChart(); });
+
+document.querySelectorAll('.project-card[data-flow]').forEach(card => {
+  card.style.cursor = 'pointer';
+  card.addEventListener('click', e => {
+    if (e.target.closest('a')) return;
+    openFlowChart(card.dataset.flow);
+  });
+  card.addEventListener('keydown', e => { if (e.key === 'Enter') openFlowChart(card.dataset.flow); });
+  card.setAttribute('tabindex', '0');
+  card.setAttribute('role', 'button');
+});
+
+// ── Scroll-reveal ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.project-card, .agent-card, .node-card, .stat-card, .profile-card').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(24px)';
+  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease, border-color 0.3s, background 0.3s';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>

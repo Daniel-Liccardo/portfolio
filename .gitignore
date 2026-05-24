@@ -1,5 +1,12 @@
 .DS_Store
 dist/
 AIGC-生图/
-daniel-portfolio-blue-v1.html
+.mindfs/
+.netlify/
+.wrangler/
 *.zip
+*.MP4
+*.mov
+*.mp4
+wrangler.toml
+upload-video.sh

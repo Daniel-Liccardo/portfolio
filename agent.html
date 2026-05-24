@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Daniel Li - Multi-Agent Orchestration Platform & Local Multimodal Toolchain" />
+<title>Agent Platform | Daniel Li</title>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/favicon-transparent.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  @font-face {
+    font-family: 'Smiley Sans';
+    src: url('assets/SmileySans-Oblique.otf.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root, [data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #090a0c;
+    --bg-2: #101114;
+    --bg-3: #17191d;
+    --surface: #1b1d22;
+    --surface-2: #23262c;
+    --border: rgba(255,255,255,0.08);
+    --border-2: rgba(255,255,255,0.14);
+    --text: #f2f4f8;
+    --text-2: #a9adb7;
+    --text-3: #626873;
+    --accent-start: #4da3ff;
+    --accent-end: #00d4aa;
+    --accent: var(--accent-start);
+    --accent-dim: rgba(77,163,255,0.14);
+    --accent-glow: rgba(77,163,255,0.28);
+    --purple: #a78bfa;
+    --purple-dim: rgba(167,139,250,0.12);
+    --nav-bg: rgba(9,10,12,0.86);
+    --grid-opacity: 0.045;
+    --serif: 'DM Serif Display', 'Smiley Sans', 'Noto Serif SC', serif;
+    --mono: 'DM Mono', monospace;
+    --sans: 'Instrument Sans', 'Noto Sans SC', sans-serif;
+    --radius: 28px;
+    --radius-sm: 18px;
+  }
+
+  [data-theme="light"] {
+    color-scheme: light;
+    --bg: #f8f9fb;
+    --bg-2: #eef0f4;
+    --bg-3: #e4e6eb;
+    --surface: #ffffff;
+    --surface-2: #f5f6f8;
+    --border: rgba(0,0,0,0.07);
+    --border-2: rgba(0,0,0,0.12);
+    --text: #1a1c20;
+    --text-2: #5a5e68;
+    --text-3: #8a8e98;
+    --accent-dim: rgba(77,163,255,0.12);
+    --accent-glow: rgba(77,163,255,0.25);
+    --purple: #7c3aed;
+    --purple-dim: rgba(124,58,237,0.10);
+    --nav-bg: rgba(248,249,251,0.88);
+    --grid-opacity: 0.09;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  html[lang="zh-Hans"] body {
+    letter-spacing: 0.02em;
+    line-height: 1.8;
+  }
+
+  a { color: inherit; }
+
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 3rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--nav-bg);
+    backdrop-filter: blur(14px);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-3);
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-logo img { height: 36px; width: auto; }
+
+  .nav-logo .logo-text {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-2);
+    letter-spacing: 0.02em;
+  }
+
+  .nav-logo:hover { color: var(--accent); }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--text-2);
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+  .nav-links a.active { color: var(--accent); }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px; height: 32px;
+    border: 1px solid var(--border-2);
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--text);
+    font-size: 15px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .theme-toggle:hover {
+    border-color: rgba(77,163,255,0.44);
+    background: var(--accent-dim);
+  }
+
+  .nav-cta {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--bg);
+    background: var(--accent);
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-sm);
+    transition: opacity 0.2s;
+    white-space: nowrap;
+  }
+
+  .nav-cta:hover { opacity: 0.9; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    padding: 10rem 3rem 6rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: var(--grid-opacity);
+    background-image:
+      linear-gradient(var(--text) 1px, transparent 1px),
+      linear-gradient(90deg, var(--text) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+  }
+
+  .hero-bg-glow {
+    position: absolute;
+    top: 40%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(77,163,255,0.06) 0%, rgba(0,212,170,0.03) 40%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-label {
+    margin-bottom: 1.5rem;
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .hero-title {
+    font-family: var(--serif);
+    font-size: clamp(36px, 5vw, 60px);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-title em {
+    background: linear-gradient(135deg, #4da3ff, #00d4aa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    font-style: italic;
+  }
+
+  .hero-sub {
+    color: var(--text-2);
+    font-size: 17px;
+    line-height: 1.8;
+    max-width: 640px;
+    margin: 0 auto 2.5rem;
+  }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+  }
+
+  .hero-stats div { text-align: center; }
+
+  .stat-num {
+    font-family: var(--serif);
+    font-size: 32px;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .stat-label {
+    margin-top: 0.35rem;
+    color: var(--text-3);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 5rem 3rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .section-label {
+    margin-bottom: 1rem;
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .section-title {
+    margin-bottom: 1.5rem;
+    font-family: var(--serif);
+    font-size: clamp(30px, 3.5vw, 44px);
+    line-height: 1.25;
+  }
+
+  .section-title em {
+    background: linear-gradient(135deg, #4da3ff, #00d4aa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    font-style: italic;
+  }
+
+  .section-desc {
+    color: var(--text-2);
+    font-size: 16px;
+    line-height: 1.9;
+    max-width: 720px;
+    margin-bottom: 3rem;
+  }
+
+  /* ── CARDS ── */
+  .glass-card {
+    border: 1px solid oklch(1 0 0 / 0.12);
+    background:
+      linear-gradient(105deg, oklch(1 0 0 / 0.06) 0%, oklch(1 0 0 / 0.015) 40%, oklch(1 0 0 / 0.04) 100%);
+    border-radius: var(--radius);
+    box-shadow:
+      0 4px 20px oklch(0 0 0 / 0.2),
+      0 1px 3px oklch(0 0 0 / 0.1),
+      inset 1px 1px 0 oklch(1 0 0 / 0.08),
+      inset -1px -1px 0 oklch(0 0 0 / 0.08);
+    padding: 2rem;
+    transition: transform 0.35s cubic-bezier(0.2, 0, 0, 1),
+                box-shadow 0.35s cubic-bezier(0.2, 0, 0, 1),
+                border-color 0.35s;
+  }
+
+  [data-theme="light"] .glass-card {
+    border: 1px solid oklch(0.95 0 0 / 0.5);
+    background:
+      linear-gradient(105deg, oklch(0.99 0 0 / 0.55) 0%, oklch(0.97 0 0 / 0.35) 40%, oklch(1 0 0 / 0.5) 100%);
+    box-shadow:
+      0 8px 32px oklch(0 0 0 / 0.08),
+      0 2px 8px oklch(0 0 0 / 0.04),
+      inset 1px 1px 0 oklch(1 0 0 / 0.7),
+      inset -1px -1px 0 oklch(0 0 0 / 0.04);
+  }
+
+  .glass-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(77,163,255,0.3);
+    box-shadow:
+      0 14px 40px -12px rgba(29,78,216,0.2),
+      0 4px 12px -4px rgba(0,0,0,0.3);
+  }
+
+  .card-icon {
+    width: 48px; height: 48px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: var(--accent-dim);
+    color: var(--accent);
+    font-size: 22px;
+    margin-bottom: 1.25rem;
+  }
+
+  .card-title {
+    font-family: var(--serif);
+    font-size: 20px;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-text {
+    color: var(--text-2);
+    font-size: 14px;
+    line-height: 1.75;
+  }
+
+  /* ── ROUTING FLOW ── */
+  .routing-flow {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    gap: 0;
+    align-items: stretch;
+    margin-bottom: 3rem;
+  }
+
+  .routing-stage {
+    text-align: center;
+    padding: 2rem 1.5rem;
+  }
+
+  .routing-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    font-size: 24px;
+    padding: 0 0.5rem;
+  }
+
+  .stage-badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-dim);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+  }
+
+  .stage-title {
+    font-family: var(--serif);
+    font-size: 22px;
+    margin-bottom: 0.5rem;
+  }
+
+  .stage-models {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-3);
+    margin-bottom: 0.75rem;
+  }
+
+  .stage-desc {
+    color: var(--text-2);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  /* ── GRID LAYOUTS ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .card-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  /* ── TOKEN STATS ── */
+  .token-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .token-bar:last-child { border-bottom: none; }
+
+  .token-name {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text-2);
+    min-width: 140px;
+  }
+
+  .token-fill-wrap {
+    flex: 1;
+    height: 8px;
+    background: var(--bg-3);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .token-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+    transition: width 1s ease;
+  }
+
+  .token-value {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text);
+    min-width: 80px;
+    text-align: right;
+  }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent-start), var(--accent-end), transparent);
+  }
+
+  .timeline-item {
+    position: relative;
+    padding-bottom: 2rem;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -2rem;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+  }
+
+  .timeline-version {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+  }
+
+  .timeline-title {
+    font-family: var(--serif);
+    font-size: 18px;
+    margin-bottom: 0.25rem;
+  }
+
+  .timeline-desc {
+    color: var(--text-2);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--text-3);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
+
+  footer a {
+    color: var(--text-2);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  footer a:hover { color: var(--accent); }
+
+  .footer-dot { color: var(--accent); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { padding: 8rem 1.5rem 4rem; min-height: 70vh; }
+    .hero-stats { gap: 1.5rem; }
+    section { padding: 3rem 1.5rem; }
+    .routing-flow {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .routing-arrow {
+      transform: rotate(90deg);
+      padding: 0.5rem 0;
+    }
+    .card-grid-3 { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="assets/logo-transparent.png" alt="Daniel Li logo">
+    <span class="logo-text">miantai.li</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#routing">Routing</a></li>
+    <li><a href="#multimodal">Multimodal</a></li>
+    <li><a href="#cost">Cost</a></li>
+    <li><a href="#evolution">Evolution</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle theme">☀️</button>
+    <a href="index.html" class="nav-cta">Portfolio ←</a>
+  </div>
+</nav>
+
+<main>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero" id="top">
+    <div class="hero-bg-glow" aria-hidden="true"></div>
+    <div class="hero-inner" style="animation: fadeInUp 0.7s ease forwards">
+      <p class="hero-label">Multi-Agent Orchestration Platform</p>
+      <h1 class="hero-title">
+        可靠靠工程，<br>不靠<em>模型大小</em>。
+      </h1>
+      <p class="hero-sub">
+        一套模型无关的 Agent 编排平台。Plan → Exec → Escalate 三层路由，跨模型交叉审计，本地多模态补盲。五月消耗超过三十亿 tokens，覆盖视频生产、品牌营销、社媒采集、代码开发全领域。
+      </p>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">30B+</div>
+          <div class="stat-label">May Tokens</div>
+        </div>
+        <div>
+          <div class="stat-num">97.9%</div>
+          <div class="stat-label">Cache Hit Rate</div>
+        </div>
+        <div>
+          <div class="stat-num">5+</div>
+          <div class="stat-label">Model Families</div>
+        </div>
+        <div>
+          <div class="stat-num">v4.1</div>
+          <div class="stat-label">Current Version</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ ARCHITECTURE ═══ -->
+  <section id="architecture">
+    <p class="section-label">01 — Architecture</p>
+    <h2 class="section-title">Harness 层<em>行为约束</em></h2>
+    <p class="section-desc">
+      不是写更好的 prompt，而是构建约束 AI 行为的 harness。灵感来自 Andrej Karpathy 的 Skills 项目——用 Markdown 文件约束 LLM 行为。Anthropic 和 OpenAI 的 Harness Engineering 博客是理论基础。整套系统模型无关，换模型只需改路由配置。
+    </p>
+
+    <div class="card-grid-3">
+      <div class="glass-card fade-in">
+        <div class="card-icon">📐</div>
+        <h3 class="card-title">分层指令架构</h3>
+        <p class="card-text">71 行常驻指令 + 领域模块按需加载。旧版 234 行全量注入，优化后每轮上下文消耗大幅减少。薄路由入口识别任务关键词，自动加载对应领域文件。</p>
+      </div>
+      <div class="glass-card fade-in">
+        <div class="card-icon">🧠</div>
+        <h3 class="card-title">Memory 语义路由</h3>
+        <p class="card-text">43 个结构化记忆文件，按关键词触发按需加载。新项目、工具跑通、品牌决策、用户反馈自动归档。跨 session 知识不丢失，每个新 session 自动继承上下文。</p>
+      </div>
+      <div class="glass-card fade-in">
+        <div class="card-icon">🛡️</div>
+        <h3 class="card-title">Skills 标准化</h3>
+        <p class="card-text">9 个可复用 Skill 模板，统一 frontmatter 字段（agent、allowed-tools、max_turns、铁律）。内置失败护栏：连续失败 2 次停止，30 步无输出自动中断。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ ROUTING ═══ -->
+  <section id="routing">
+    <p class="section-label">02 — Three-Layer Routing</p>
+    <h2 class="section-title">Plan <em>→</em> Exec <em>→</em> Escalate</h2>
+    <p class="section-desc">
+      三层路由是整个系统的调度骨架。前期在 Notion 用强推理模型出完整方案，锁定后执行。执行阶段自动拆分并行 Agent，失败自动升档重试。后期标准归档，决策写入 Memory 供后续复用。
+    </p>
+
+    <div class="routing-flow">
+      <div class="routing-stage glass-card">
+        <span class="stage-badge">Plan</span>
+        <h3 class="stage-title">规划层</h3>
+        <p class="stage-models">Opus 4.7 · GPT 5.5<br>DeepSeek V4 Pro · MiMo V2.5 Pro</p>
+        <p class="stage-desc">分析需求、拆解任务、设计方案。不亲自执行具体操作。长链推理，一次到位。</p>
+      </div>
+      <div class="routing-arrow">→</div>
+      <div class="routing-stage glass-card">
+        <span class="stage-badge">Exec</span>
+        <h3 class="stage-title">执行层</h3>
+        <p class="stage-models">Haiku 级别执行模型<br>V4 Flash · MiMo V2.5 · MiMo V2-Omni</p>
+        <p class="stage-desc">读文件、写代码、跑命令、搜索。收到任务直接做，不做规划。十秒内判断并行性，独立子任务并发。</p>
+      </div>
+      <div class="routing-arrow">→</div>
+      <div class="routing-stage glass-card">
+        <span class="stage-badge">Escalate</span>
+        <h3 class="stage-title">升档层</h3>
+        <p class="stage-models">自动触发<br>连续失败 2 次 → 切更大参数推理模型</p>
+        <p class="stage-desc">安全网。不死磕轻量模型，自动切回强推理模型重试。结果统一审查合并。</p>
+      </div>
+    </div>
+
+    <div class="glass-card fade-in" style="margin-top: 1.5rem">
+      <h3 class="card-title" style="margin-bottom: 1rem">交叉审计循环</h3>
+      <p class="card-text" style="font-size: 15px; line-height: 1.9">
+        视觉产出不信任单一模型。图像生成模型出图 → 视觉理解模型审计 → 生成模型迭代 → 第三模型终审。<strong style="color: var(--accent)">谁产出谁不审自己</strong>，消除同源偏差。引入 GLM-5V 做设计辅助、numpy 像素级审计、语义审计三层门禁。
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ MULTIMODAL ═══ -->
+  <section id="multimodal">
+    <p class="section-label">03 — Local Multimodal</p>
+    <h2 class="section-title">视觉能力<em>前置</em></h2>
+    <p class="section-desc">
+      主模型缺多模态能力时自动激活本地辅助链。不是所有任务都需要调云端 API，本地能做的就本地做。零 API 成本，Apple Silicon 原生加速。
+    </p>
+
+    <div class="card-grid">
+      <div class="glass-card fade-in">
+        <div class="card-icon">🎙️</div>
+        <h3 class="card-title">mlx-whisper 音频转写</h3>
+        <p class="card-text">Apple Silicon 本地运行，whisper-small-mlx 模型。10MB MP3 约 40 秒转写完成。零 API 成本，中文效果好。</p>
+      </div>
+      <div class="glass-card fade-in">
+        <div class="card-icon">📷</div>
+        <h3 class="card-title">Pillow + NumPy 照片挑片</h3>
+        <p class="card-text">时间聚类 → 清晰度评分（Laplacian 方差）→ 曝光质量 → 对比度加权选最佳帧。纯本地算法，零成本。</p>
+      </div>
+      <div class="glass-card fade-in">
+        <div class="card-icon">🎨</div>
+        <h3 class="card-title">GLM-5V 视觉审计</h3>
+        <p class="card-text">审美判断、品牌色审计、设计迭代辅助。GLM-5V-Turbo 首选，GLM-4.6V 回退。单张约 2500 tokens。</p>
+      </div>
+      <div class="glass-card fade-in">
+        <div class="card-icon">👁️</div>
+        <h3 class="card-title">Qwen3-VL 空间分析</h3>
+        <p class="card-text">OCR 文字提取、色值识别、空间布局分析。Ollama 本地部署，4B 参数量，离线可用。</p>
+      </div>
+      <div class="glass-card fade-in">
+        <div class="card-icon">🔐</div>
+        <h3 class="card-title">Logo 双重验证</h3>
+        <p class="card-text">感知哈希（pHash）加 sips 像素取证。AI 生成的 Logo 可能看着像但细节不对，双重验证确保品牌一致性。</p>
+      </div>
+      <div class="glass-card fade-in">
+        <div class="card-icon">📄</div>
+        <h3 class="card-title">Chrome Headless PDF</h3>
+        <p class="card-text">HTML → PDF 渲染，处理 #→%23 编码问题和 flex 分页兼容性。用于品牌报告和文档交付。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ COST ═══ -->
+  <section id="cost">
+    <p class="section-label">04 — Cost Engineering</p>
+    <h2 class="section-title">架构级<em>成本控制</em></h2>
+    <p class="section-desc">
+      不是选便宜模型，而是从架构层面控制成本。Prefix Cache 优化、分层指令、环境变量治理、Agent 批量合并，四个杠杆叠加。
+    </p>
+
+    <div class="glass-card fade-in" style="margin-bottom: 2rem">
+      <h3 class="card-title" style="margin-bottom: 1.5rem">May 2026 Token Usage</h3>
+
+      <div class="token-bar">
+        <span class="token-name">DeepSeek V4</span>
+        <div class="token-fill-wrap"><div class="token-fill" style="width: 96%"></div></div>
+        <span class="token-value">19.2 亿</span>
+      </div>
+      <div class="token-bar">
+        <span class="token-name">MiMo (Token Plan)</span>
+        <div class="token-fill-wrap"><div class="token-fill" style="width: 30%"></div></div>
+        <span class="token-value">6 亿 (planned)</span>
+      </div>
+      <div class="token-bar">
+        <span class="token-name">MiniMax</span>
+        <div class="token-fill-wrap"><div class="token-fill" style="width: 5%"></div></div>
+        <span class="token-value">~1 亿</span>
+      </div>
+      <div class="token-bar">
+        <span class="token-name">GLM-5.1</span>
+        <div class="token-fill-wrap"><div class="token-fill" style="width: 5%"></div></div>
+        <span class="token-value">~1 亿</span>
+      </div>
+      <div class="token-bar">
+        <span class="token-name">K2.6</span>
+        <div class="token-fill-wrap"><div class="token-fill" style="width: 1.5%"></div></div>
+        <span class="token-value">2,500 req</span>
+      </div>
+    </div>
+
+    <div class="card-grid">
+      <div class="glass-card fade-in">
+        <h3 class="card-title">Prefix Cache 优化</h3>
+        <p class="card-text">轻量模型缓存命中率一度 58%，实际成本是强推理模型五倍。标准化 prompt 前缀 + 批量合并后，DeepSeek Pro 稳定 97.9%，MiMo 超 90%。</p>
+      </div>
+      <div class="glass-card fade-in">
+        <h3 class="card-title">分层指令架构</h3>
+        <p class="card-text">234 行全量注入 → 71 行常驻 + 领域按需加载。不相关的内容不进上下文，每轮 token 消耗大幅减少。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ EVOLUTION ═══ -->
+  <section id="evolution">
+    <p class="section-label">05 — Evolution</p>
+    <h2 class="section-title">版本<em>迭代</em></h2>
+    <p class="section-desc">
+      从双模型路由到多 Agent 编排平台，每个版本都是从实际项目踩坑中长出来的。理论来自 Karpathy Skills、Harness Engineering、Reasonix 三层路由，实战来自医疗器械视频、教育品牌营销、展会视频等多领域交付。
+    </p>
+
+    <div class="timeline">
+      <div class="timeline-item fade-in">
+        <div class="timeline-version">v3.0</div>
+        <h3 class="timeline-title">双模型路由 + 并行优先</h3>
+        <p class="timeline-desc">Opus Plan / Flash Exec 分工，引入并行调度策略。奠定 Plan → Exec 二层骨架。</p>
+      </div>
+      <div class="timeline-item fade-in">
+        <div class="timeline-version">v3.1 – v3.2</div>
+        <h3 class="timeline-title">MCP 接入 + 成本工程</h3>
+        <p class="timeline-desc">小红书 MCP 服务接入，隐身浏览器反检测。发现 Flash 缓存失效导致 5 倍成本差，启动 Prefix Cache 优化。</p>
+      </div>
+      <div class="timeline-item fade-in">
+        <div class="timeline-version">v3.6</div>
+        <h3 class="timeline-title">Reasonix 三层路由</h3>
+        <p class="timeline-desc">引入 Escalate 层：执行模型连续失败 2 次自动切更大参数推理模型。Plan → Exec → Escalate 三层定型。</p>
+      </div>
+      <div class="timeline-item fade-in">
+        <div class="timeline-version">v3.7 – v3.8</div>
+        <h3 class="timeline-title">视觉路由 + Memory 语义路由</h3>
+        <p class="timeline-desc">视觉任务强制路由给 Codex 执行，主模型只做推理和审查。Memory 系统从 39 个文件发展到 43 个，关键词触发按需加载。</p>
+      </div>
+      <div class="timeline-item fade-in">
+        <div class="timeline-version">v4.0</div>
+        <h3 class="timeline-title">全仓标准化 + Handoff 协议</h3>
+        <p class="timeline-desc">项目目录标准模板、Skills 标准化、Session Handoff 机制。跨 session 知识不丢失。</p>
+      </div>
+      <div class="timeline-item fade-in">
+        <div class="timeline-version">v4.1</div>
+        <h3 class="timeline-title">MiMo 原生接入 + 模型无关</h3>
+        <p class="timeline-desc">小米 MiMo 三层变体全面接入。MCP 服务器实现跨模型调用。整套 harness 脱离 DeepSeek 硬编码，实现模型无关。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ OPEN SOURCE ═══ -->
+  <section id="opensource">
+    <p class="section-label">06 — Open Source</p>
+    <h2 class="section-title">计划<em>开源</em></h2>
+    <p class="section-desc">
+      以上框架和工具链计划开源，当前在文档完善和去敏感化处理中。
+    </p>
+
+    <div class="card-grid">
+      <div class="glass-card fade-in">
+        <div class="card-icon">🎬</div>
+        <h3 class="card-title">AI 视频生产框架</h3>
+        <p class="card-text">四阶段管线 + 五道门禁 + 四层审计（像素级→视觉→语义→跨模型）。从三个版本实战中提炼 18 条可复用经验，换产品/品牌/模型均可复用。</p>
+      </div>
+      <div class="glass-card fade-in">
+        <div class="card-icon">⚙️</div>
+        <h3 class="card-title">Agent Harness 工具集</h3>
+        <p class="card-text">分层指令架构、Hook 自动升档、Skills 标准化模板、Memory 语义路由系统。从实际项目踩坑中抽象出来的可复用组件。</p>
+      </div>
+      <div class="glass-card fade-in">
+        <div class="card-icon">🔗</div>
+        <h3 class="card-title">社媒数据采集</h3>
+        <p class="card-text">基于 MCP 协议的数据服务（13 个工具端点），隐身浏览器反检测，QR 扫码登录 + Cookie 管理 + 限速策略。</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span>Daniel Li <span class="footer-dot">·</span> Multi-Agent Orchestration Platform</span>
+  <a href="index.html">← Back to Portfolio</a>
+</footer>
+
+<script>
+  // Theme toggle
+  const toggle = document.getElementById('themeToggle');
+  const root = document.documentElement;
+  const saved = localStorage.getItem('theme');
+  if (saved) { root.setAttribute('data-theme', saved); toggle.textContent = saved === 'light' ? '🌙' : '☀️'; }
+  toggle.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    toggle.textContent = next === 'light' ? '🌙' : '☀️';
+  });
+
+  // Fade in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Active nav link
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => { if (window.scrollY >= s.offsetTop - 200) current = s.id; });
+    navLinks.forEach(a => {
+      a.classList.remove('active');
+      if (a.getAttribute('href') === '#' + current) a.classList.add('active');
+    });
+  });
+</script>
+
+</body>
+</html>
