@@ -2026,9 +2026,9 @@
   <a href="#hero" class="nav-logo"><img src="assets/logo-transparent.png" alt="Daniel Li logo"><span class="logo-text">miantai.li</span></a>
   <ul class="nav-links">
     <li><a href="#about" data-i18n="nav.about">简介</a></li>
-    <li><a href="#system" data-i18n="nav.system">系统</a></li>
+    <li><a href="#system" data-i18n="nav.system">Agent</a></li>
     <li><a href="#work" data-i18n="nav.work">作品</a></li>
-    <li><a href="#agents" data-i18n="nav.agents">Agents</a></li>
+    <li><a href="#agents" data-i18n="nav.agents">Multimodal</a></li>
     <li><a href="#contact" data-i18n="nav.contact">联系</a></li>
   </ul>
   <div class="nav-actions">
@@ -2169,57 +2169,113 @@
   </section>
 
   <section id="system">
-    <div class="section-label" data-i18n="system.label">02 — 系统</div>
-    <h2 class="section-title"><span data-i18n="system.title1">AI 驱动</span><br><em data-i18n="system.title2">操作系统</em></h2>
-    <div class="system-flow">
-        <div class="node-card" data-step="01">
-          <span class="step-num">01</span>
-          <div class="node-title" data-i18n="system.step1.title">输入与目标</div>
-          <div class="node-note" data-i18n="system.step1.desc">客户 brief、市场信号、品牌规范。</div>
-        </div>
-        <div class="node-card" data-step="02">
-          <span class="step-num">02</span>
-          <div class="node-title" data-i18n="system.step2.title">记忆与路由</div>
-          <div class="node-note" data-i18n="system.step2.desc">DANIEL.md + 知识库 + 护栏，按任务自动加载。</div>
-        </div>
-        <div class="node-card" data-step="03">
-          <span class="step-num">03</span>
-          <div class="node-title" data-i18n="system.step3.title">预演与脚本</div>
-          <div class="node-note" data-i18n="system.step3.desc">分镜、镜头表、制作计划和资源配置。</div>
-        </div>
-        <div class="node-card" data-step="04">
-          <span class="step-num">04</span>
-          <div class="node-title" data-i18n="system.step4.title">生成与制作</div>
-          <div class="node-note" data-i18n="system.step4.desc">AI 素材生成 + 实拍执行 + 后期整合。</div>
-        </div>
-        <div class="node-card" data-step="05">
-          <span class="step-num">05</span>
-          <div class="node-title" data-i18n="system.step5.title">QA 与交付</div>
-          <div class="node-note" data-i18n="system.step5.desc">一致性检查、版本管理、多平台交付。</div>
-        </div>
-        <div class="node-card" data-step="06">
-          <span class="step-num">06</span>
-          <div class="node-title" data-i18n="system.step6.title">复盘与回写</div>
-          <div class="node-note" data-i18n="system.step6.desc">表现数据回写记忆库，优化下一轮策略。</div>
-        </div>
+    <div class="section-label" data-i18n="system.label">02 — Agent Platform</div>
+    <h2 class="section-title"><span data-i18n="system.title1">多 Agent</span><br><em data-i18n="system.title2">编排平台</em></h2>
+    <p style="color:var(--text-2);font-size:15px;line-height:1.85;max-width:680px;margin-bottom:2.5rem;" data-i18n="system.intro">模型无关的 Agent 编排系统。Plan → Exec → Escalate 三层路由，跨模型交叉审计，本地多模态补盲。灵感来自 Karpathy Skills 项目和 Harness Engineering 理念——不是写更好的 prompt，而是构建约束 AI 行为的 harness。</p>
+
+    <!-- Three-Layer Routing Flow -->
+    <div class="system-flow" style="margin-bottom:2rem;">
+      <div class="node-card" data-step="01" style="border-left:3px solid var(--accent);">
+        <span class="step-num" style="color:var(--accent);">Plan</span>
+        <div class="node-title" data-i18n="system.step1.title">规划层</div>
+        <div class="node-note" data-i18n="system.step1.desc">Opus 4.7 / GPT 5.5 / DeepSeek V4 Pro / MiMo V2.5 Pro — 分析需求、拆解任务、设计方案。不亲自执行。</div>
+      </div>
+      <div class="node-card" data-step="02" style="border-left:3px solid var(--purple);">
+        <span class="step-num" style="color:var(--purple);">Exec</span>
+        <div class="node-title" data-i18n="system.step2.title">执行层</div>
+        <div class="node-note" data-i18n="system.step2.desc">Haiku 级别执行模型 — 读写代码、调用 API、搜索。十秒内判断并行性，独立子任务并发。</div>
+      </div>
+      <div class="node-card" data-step="03" style="border-left:3px solid #f59e0b;">
+        <span class="step-num" style="color:#f59e0b;">Escalate</span>
+        <div class="node-title" data-i18n="system.step3.title">升档层</div>
+        <div class="node-note" data-i18n="system.step3.desc">执行模型连续失败 2 次 → 自动切更大参数推理模型重试。不死磕轻量模型。</div>
+      </div>
     </div>
+
+    <!-- Architecture Cards -->
+    <div class="system-flow" style="grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-bottom:2rem;">
+      <div class="node-card" style="padding:1.5rem;">
+        <div style="font-size:22px;margin-bottom:0.75rem;">📐</div>
+        <div class="node-title">分层指令</div>
+        <div class="node-note">71 行常驻 + 领域按需加载。旧版 234 行全量注入，每轮上下文消耗大幅减少。</div>
+      </div>
+      <div class="node-card" style="padding:1.5rem;">
+        <div style="font-size:22px;margin-bottom:0.75rem;">🧠</div>
+        <div class="node-title">Memory 路由</div>
+        <div class="node-note">43 个记忆文件按关键词触发加载。跨 session 知识不丢失，新 session 自动继承。</div>
+      </div>
+      <div class="node-card" style="padding:1.5rem;">
+        <div style="font-size:22px;margin-bottom:0.75rem;">🔄</div>
+        <div class="node-title">交叉审计</div>
+        <div class="node-note">出图 → 审计 → 迭代 → 终审。谁产出谁不审自己，消除同源偏差。</div>
+      </div>
+    </div>
+
     <div class="system-stats">
-      <div class="stat-card"><strong>60-70%</strong><span data-i18n="system.s1">更低 token 成本 — 分层记忆加载</span></div>
-      <div class="stat-card"><strong>Zero errors</strong><span data-i18n="system.s2">228 个素材 — AI + SQL 批处理零错误</span></div>
-      <div class="stat-card"><strong>3 platforms</strong><span data-i18n="system.s3">一套配置 — Notion AI / Codex / Claude</span></div>
+      <div class="stat-card"><strong>30B+</strong><span>五月 Token 总用量</span></div>
+      <div class="stat-card"><strong>97.9%</strong><span>DeepSeek Pro 缓存命中率</span></div>
+      <div class="stat-card"><strong>5+</strong><span>模型家族无缝切换</span></div>
     </div>
   </section>
 
   <section id="agents">
-    <div class="section-label" data-i18n="agents.label">04 — AI 智能体</div>
-    <h2 class="section-title"><span data-i18n="agents.title1">AI 团队</span><br><em data-i18n="agents.title2">已部署</em></h2>
-    <div class="system-flow">
-      <div class="node-card"><span class="step-num">01</span><div class="node-title" data-i18n="agents.a1.title">记忆路由</div><div class="node-note" data-i18n="agents.a1.desc">根据任务类型把上下文路由到正确知识库。分层加载可减少 60-70% token 成本。</div></div>
-      <div class="node-card"><span class="step-num">02</span><div class="node-title" data-i18n="agents.a2.title">Brief 解析</div><div class="node-note" data-i18n="agents.a2.desc">把客户 brief 转成结构化脚本、镜头表和设备计划，适合快速进入制作。</div></div>
-      <div class="node-card"><span class="step-num">03</span><div class="node-title" data-i18n="agents.a3.title">内容适配</div><div class="node-note" data-i18n="agents.a3.desc">把长视频拆成适配小红书、LinkedIn、TikTok、YouTube、X 的短内容与文案。</div></div>
-      <div class="node-card"><span class="step-num">04</span><div class="node-title" data-i18n="agents.a4.title">视觉 QA</div><div class="node-note" data-i18n="agents.a4.desc">检查 AI 生成素材的人物、产品和风格一致性，把异常标记给人工复核。</div></div>
-      <div class="node-card"><span class="step-num">05</span><div class="node-title" data-i18n="agents.a5.title">数据分析</div><div class="node-note" data-i18n="agents.a5.desc">分析内容表现数据，并输出带指标依据的优化建议。</div></div>
-      <div class="node-card"><span class="step-num">06</span><div class="node-title" data-i18n="agents.a6.title">知识沉淀</div><div class="node-note" data-i18n="agents.a6.desc">批量把原始内容转成结构化知识条目。曾在 2.5 小时内处理 228 个素材且零错误。</div></div>
+    <div class="section-label" data-i18n="agents.label">03 — Multimodal + Cost</div>
+    <h2 class="section-title"><span data-i18n="agents.title1">本地多模态</span><br><em data-i18n="agents.title2">成本工程</em></h2>
+
+    <!-- Local Multimodal -->
+    <div class="system-flow" style="grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-bottom:2rem;">
+      <div class="node-card" style="padding:1.5rem;">
+        <div style="font-size:22px;margin-bottom:0.75rem;">🎙️</div>
+        <div class="node-title">mlx-whisper</div>
+        <div class="node-note">Apple Silicon 本地音频转写。零 API 成本，10MB 约 40 秒。</div>
+      </div>
+      <div class="node-card" style="padding:1.5rem;">
+        <div style="font-size:22px;margin-bottom:0.75rem;">🎨</div>
+        <div class="node-title">GLM-5V + Qwen3-VL</div>
+        <div class="node-note">视觉审美判断、品牌色审计、OCR 和空间分析。本地 + 云端双链路。</div>
+      </div>
+      <div class="node-card" style="padding:1.5rem;">
+        <div style="font-size:22px;margin-bottom:0.75rem;">📷</div>
+        <div class="node-title">Pillow + NumPy</div>
+        <div class="node-note">照片自动挑片：清晰度 + 曝光 + 对比度加权评分，纯本地零成本。</div>
+      </div>
+    </div>
+
+    <!-- Cost Engineering -->
+    <div class="system-flow" style="grid-template-columns:repeat(2,1fr);gap:1.25rem;margin-bottom:2rem;">
+      <div class="node-card" style="padding:1.5rem;">
+        <div class="node-title">Prefix Cache 优化</div>
+        <div class="node-note">轻量模型命中率一度 58%，实际成本是强推理 5 倍。标准化 prompt 前缀 + 批量合并后，DeepSeek Pro 稳定 97.9%，MiMo 超 90%。</div>
+      </div>
+      <div class="node-card" style="padding:1.5rem;">
+        <div class="node-title">分层指令 + 环境治理</div>
+        <div class="node-note">234 行 → 71 行常驻 + 领域按需加载。关闭无效缓存标注和变化 header，三十亿 token 基础上节省可观成本。</div>
+      </div>
+    </div>
+
+    <!-- Token Usage Bars -->
+    <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;">
+      <div style="font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-3);margin-bottom:1.25rem;">May 2026 Token Usage</div>
+      <div style="display:flex;align-items:center;gap:1rem;padding:0.6rem 0;border-bottom:1px solid var(--border);">
+        <span style="font-family:var(--mono);font-size:12px;color:var(--text-2);min-width:110px;">DeepSeek V4</span>
+        <div style="flex:1;height:6px;background:var(--bg-3);border-radius:3px;overflow:hidden;"><div style="width:96%;height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent-start),var(--accent-end));"></div></div>
+        <span style="font-family:var(--mono);font-size:12px;color:var(--text);min-width:70px;text-align:right;">19.2 亿</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:1rem;padding:0.6rem 0;border-bottom:1px solid var(--border);">
+        <span style="font-family:var(--mono);font-size:12px;color:var(--text-2);min-width:110px;">MiMo</span>
+        <div style="flex:1;height:6px;background:var(--bg-3);border-radius:3px;overflow:hidden;"><div style="width:30%;height:100%;border-radius:3px;background:linear-gradient(90deg,#f59e0b,#ef4444);"></div></div>
+        <span style="font-family:var(--mono);font-size:12px;color:var(--text);min-width:70px;text-align:right;">6 亿</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:1rem;padding:0.6rem 0;border-bottom:1px solid var(--border);">
+        <span style="font-family:var(--mono);font-size:12px;color:var(--text-2);min-width:110px;">MiniMax</span>
+        <div style="flex:1;height:6px;background:var(--bg-3);border-radius:3px;overflow:hidden;"><div style="width:5%;height:100%;border-radius:3px;background:linear-gradient(90deg,#a78bfa,#6366f1);"></div></div>
+        <span style="font-family:var(--mono);font-size:12px;color:var(--text);min-width:70px;text-align:right;">~1 亿</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:1rem;padding:0.6rem 0;">
+        <span style="font-family:var(--mono);font-size:12px;color:var(--text-2);min-width:110px;">GLM-5.1</span>
+        <div style="flex:1;height:6px;background:var(--bg-3);border-radius:3px;overflow:hidden;"><div style="width:5%;height:100%;border-radius:3px;background:linear-gradient(90deg,#10b981,#059669);"></div></div>
+        <span style="font-family:var(--mono);font-size:12px;color:var(--text);min-width:70px;text-align:right;">~1 亿</span>
+      </div>
     </div>
   </section>
 
