@@ -1948,9 +1948,15 @@
   
   [data-theme="dark"] .model-logo[alt="OpenAI"] { filter: brightness(0) invert(1); }
   [data-theme="light"] .model-logo[alt="OpenAI"] { filter: none; }
-  .model-logo[alt="Qwen"] { padding: 2px 4px; border-radius: 4px; }
-  [data-theme="dark"] .model-logo[alt="Qwen"] { background: rgba(255,255,255,0.1); }
-  [data-theme="light"] .model-logo[alt="Qwen"] { background: none; }
+
+  
+  .qwen-dark { display: none; }
+  [data-theme="dark"] .qwen-light { display: none; }
+  [data-theme="dark"] .qwen-dark { display: inline-block; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) .qwen-light { display: none; }
+    :root:not([data-theme]) .qwen-dark { display: inline-block; }
+  }
 
   .model-logo[alt="MiMo"] {
     height: 18px;
@@ -2493,7 +2499,7 @@
         </div>
         <div class="model-card" data-color="amber" style="padding:0.75rem;border:1px solid var(--border);border-radius:12px;border-left:3px solid #f59e0b;display:flex;flex-direction:column;gap:0.5rem;">
           <div style="display:flex;align-items:center;gap:0.5rem;">
-            <img src="assets/qwen-logo.png" class="model-logo" alt="Qwen">
+            <img src="assets/qwen-color.svg" class="model-logo qwen-light" alt="Qwen"><img src="assets/qwen-white.svg" class="model-logo qwen-dark" alt="Qwen">
             <div style="font-size:13px;font-weight:600;">Qwen3-VL 4B</div>
           </div>
           <div style="font-size:11px;color:var(--text-3);">OCR · 空间分析 · Ollama本地</div>
