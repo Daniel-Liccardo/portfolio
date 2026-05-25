@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<!-- AI-assisted draft for review before external use. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="ai-generated-draft" content="AI-assisted draft for review before external publishing" />
+<title>Daniel Li | AI Video Producer & Digital Systems Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&amp;family=DM+Mono:wght@300;400;500&amp;family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #090a0c;
+    --bg-2: #101114;
+    --bg-3: #17191d;
+    --surface: #1b1d22;
+    --surface-2: #23262c;
+    --border: rgba(255,255,255,0.08);
+    --border-2: rgba(255,255,255,0.14);
+    --text: #f2f4f8;
+    --text-2: #a9adb7;
+    --text-3: #626873;
+    --accent: #4da3ff;
+    --accent-2: #8fd3ff;
+    --accent-dim: rgba(77,163,255,0.14);
+    --accent-glow: rgba(77,163,255,0.28);
+    --warm: #c59a6b;
+    --serif: 'DM Serif Display', serif;
+    --mono: 'DM Mono', monospace;
+    --sans: 'Instrument Sans', sans-serif;
+    --radius: 8px;
+    --radius-sm: 6px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  .cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    width: 10px;
+    height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s, opacity 0.2s;
+    mix-blend-mode: difference;
+  }
+
+  .cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    width: 36px;
+    height: 36px;
+    border: 1.5px solid rgba(77,163,255,0.55);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, width 0.3s, height 0.3s;
+  }
+
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 3rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(9,10,12,0.86);
+    backdrop-filter: blur(14px);
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.25rem;
+    list-style: none;
+  }
+
+  .nav-links a,
+  .nav-cta {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .nav-links a {
+    color: var(--text-2);
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  .nav-cta {
+    color: var(--bg);
+    background: var(--accent);
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-sm);
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .nav-cta:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 8rem 3rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+    background-image:
+      linear-gradient(var(--text) 1px, transparent 1px),
+      linear-gradient(90deg, var(--text) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  .hero-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.75fr);
+    gap: 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-copy {
+    align-self: center;
+    min-width: 0;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(77,163,255,0.36);
+    padding: 0.35rem 0.85rem;
+    border-radius: 100px;
+    margin-bottom: 2rem;
+    max-width: 100%;
+    white-space: normal;
+    line-height: 1.4;
+    animation: fadeInUp 0.6s ease forwards;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .hero-badge span { min-width: 0; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+
+  .hero-title {
+    font-family: var(--serif);
+    font-size: clamp(52px, 8vw, 108px);
+    line-height: 1;
+    color: var(--text);
+    animation: fadeInUp 0.6s 0.1s ease forwards;
+  }
+
+  .hero-title em { font-style: italic; color: var(--accent); }
+
+  .hero-sub {
+    margin-top: 2rem;
+    max-width: 590px;
+    font-size: 17px;
+    color: var(--text-2);
+    line-height: 1.75;
+    animation: fadeInUp 0.6s 0.2s ease forwards;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    animation: fadeInUp 0.6s 0.3s ease forwards;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    min-height: 44px;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s, background 0.2s;
+  }
+
+  .btn-primary {
+    color: var(--bg);
+    background: var(--accent);
+    padding: 0.85rem 1.65rem;
+    font-weight: 600;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px var(--accent-glow);
+  }
+
+  .btn-secondary {
+    color: var(--text);
+    border: 1px solid var(--border-2);
+    padding: 0.85rem 1.65rem;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 2.5rem;
+    margin-top: 4rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--border);
+    animation: fadeInUp 0.6s 0.4s ease forwards;
+  }
+
+  .stat-num {
+    font-family: var(--serif);
+    font-size: 36px;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-3);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .hero-reel {
+    min-width: 0;
+    align-self: center;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: var(--radius);
+    overflow: hidden;
+    animation: fadeInUp 0.7s 0.25s ease forwards;
+  }
+
+  .reel-frame {
+    display: block;
+    position: relative;
+    aspect-ratio: 16 / 11;
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--text);
+  }
+
+  .reel-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: saturate(0.95) contrast(1.05);
+    transition: transform 0.45s ease;
+  }
+
+  .reel-frame:hover img { transform: scale(1.04); }
+
+  .reel-overlay {
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+  }
+
+  .reel-kicker {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent-2);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .reel-title {
+    font-family: var(--serif);
+    font-size: 25px;
+    line-height: 1.05;
+    margin-top: 0.25rem;
+  }
+
+  .play-chip {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    border-radius: 50%;
+    color: var(--bg);
+    background: var(--accent);
+    font-family: var(--mono);
+    font-size: 15px;
+  }
+
+  .reel-meta {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--border);
+  }
+
+  .reel-meta div {
+    padding: 1rem;
+    border-right: 1px solid var(--border);
+  }
+
+  .reel-meta div:last-child { border-right: 0; }
+
+  .meta-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .meta-value {
+    margin-top: 0.35rem;
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2rem;
+    right: 3rem;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    animation: fadeInUp 0.6s 0.5s ease forwards;
+  }
+
+  .hero-scroll::after {
+    content: '';
+    width: 1px;
+    height: 48px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scrollLine 2s ease-in-out infinite;
+  }
+
+  @keyframes scrollLine {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  @keyframes fadeInUp {
+    from { transform: translateY(20px); }
+    to { transform: translateY(0); }
+  }
+
+  .marquee-wrap {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    padding: 0.9rem 0;
+    background: var(--bg-2);
+  }
+
+  .marquee-track {
+    display: flex;
+    gap: 3rem;
+    width: max-content;
+    animation: marquee 32s linear infinite;
+  }
+
+  .marquee-wrap:hover .marquee-track { animation-play-state: paused; }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .marquee-item {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .marquee-item .dot {
+    width: 4px;
+    height: 4px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  .sections-wrap { border-top: 1px solid var(--border); }
+
+  section {
+    padding: 6rem 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(36px, 4vw, 52px);
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title em { font-style: italic; color: var(--accent); }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.85fr;
+    gap: 4rem;
+    align-items: start;
+    margin-top: 3rem;
+  }
+
+  .about-text p {
+    color: var(--text-2);
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 1.25rem;
+  }
+
+  .about-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .about-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+  }
+
+  .about-card-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--accent-dim);
+    border: 2px solid rgba(77,163,255,0.36);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--serif);
+    font-size: 28px;
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+  }
+
+  .about-card h3 {
+    font-family: var(--serif);
+    font-size: 22px;
+    margin-bottom: 0.25rem;
+  }
+
+  .about-card .role {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+  }
+
+  .info-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-2);
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .info-row:last-child { border-bottom: none; }
+  .info-icon { color: var(--accent); font-size: 14px; width: 16px; flex-shrink: 0; }
+
+  .skills-section,
+  .exp-section,
+  .projects-section,
+  .equipment-section,
+  .contact-section {
+    border-top: 1px solid var(--border);
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .skill-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    transition: border-color 0.3s, background 0.3s, transform 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skill-card:hover {
+    border-color: rgba(77,163,255,0.42);
+    background: var(--surface-2);
+    transform: translateY(-4px);
+  }
+
+  .skill-card-icon {
+    font-size: 22px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: var(--accent-dim);
+    border-radius: var(--radius-sm);
+    color: var(--accent);
+    font-style: normal;
+  }
+
+  .skill-card h4 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+  }
+
+  .skill-card p {
+    font-size: 13px;
+    color: var(--text-2);
+    line-height: 1.6;
+  }
+
+  .skill-tags,
+  .project-footer,
+  .equipment-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 1rem;
+  }
+
+  .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-3);
+    background: var(--bg-3);
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  .exp-timeline {
+    margin-top: 3rem;
+    position: relative;
+  }
+
+  .exp-timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .exp-item {
+    padding-left: 2.5rem;
+    padding-bottom: 3rem;
+    position: relative;
+  }
+
+  .exp-item:last-child { padding-bottom: 0; }
+
+  .exp-dot {
+    position: absolute;
+    left: -5px;
+    top: 6px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+  }
+
+  .exp-date {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .exp-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+
+  .exp-company {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+    margin-bottom: 0.75rem;
+  }
+
+  .exp-desc {
+    font-size: 14px;
+    color: var(--text-2);
+    line-height: 1.7;
+    max-width: 720px;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .project-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+  }
+
+  .project-card:hover {
+    border-color: rgba(77,163,255,0.44);
+    transform: translateY(-4px);
+  }
+
+  .project-card::after {
+    content: '↗';
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    font-size: 16px;
+    color: var(--text-3);
+    transition: color 0.2s, transform 0.2s;
+  }
+
+  .project-card:hover::after {
+    color: var(--accent);
+    transform: translate(2px, -2px);
+  }
+
+  .project-media {
+    aspect-ratio: 16 / 9;
+    background: var(--bg-3);
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .project-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.45s ease;
+  }
+
+  .project-card:hover .project-media img { transform: scale(1.04); }
+
+  .project-body { padding: 1.75rem; }
+
+  .project-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-3);
+    letter-spacing: 0.1em;
+    margin-bottom: 1.25rem;
+  }
+
+  .project-card h3 {
+    font-family: var(--serif);
+    font-size: 22px;
+    margin-bottom: 0.6rem;
+    color: var(--text);
+  }
+
+  .project-card p {
+    font-size: 14px;
+    color: var(--text-2);
+    line-height: 1.7;
+  }
+
+  .equipment-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .equipment-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+  }
+
+  .equipment-card h4 {
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .equipment-card p {
+    color: var(--text-2);
+    font-size: 13px;
+    line-height: 1.75;
+  }
+
+  .contact-inner {
+    margin-top: 3rem;
+    padding: 3.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact-inner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.05;
+    background-image:
+      linear-gradient(var(--text) 1px, transparent 1px),
+      linear-gradient(90deg, var(--text) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+  }
+
+  .contact-inner > * { position: relative; z-index: 1; }
+
+  .contact-title {
+    font-family: var(--serif);
+    font-size: clamp(30px, 3vw, 44px);
+    line-height: 1.1;
+  }
+
+  .contact-title em { font-style: italic; color: var(--accent); }
+
+  .contact-sub {
+    color: var(--text-2);
+    font-size: 15px;
+    margin-top: 1rem;
+    line-height: 1.7;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 1rem 1.25rem;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .contact-link:hover {
+    border-color: rgba(77,163,255,0.44);
+    background: var(--accent-dim);
+  }
+
+  .contact-link-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    background: var(--accent-dim);
+    color: var(--accent-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .contact-link-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .contact-link-value {
+    font-size: 14px;
+    font-weight: 600;
+    word-break: break-word;
+  }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-3);
+    letter-spacing: 0.06em;
+  }
+
+  .footer-dot { color: var(--accent); }
+
+  @media (max-width: 960px) {
+    .hero-content,
+    .about-grid,
+    .contact-inner {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    .skills-grid,
+    .equipment-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem; }
+    .nav-links { display: none; }
+    .nav-cta {
+      font-size: 0;
+      padding: 0.5rem 0.9rem;
+    }
+
+    .nav-cta::before {
+      content: 'Book';
+      font-size: 12px;
+    }
+
+    .hero { padding: 6.5rem 1rem 3rem; }
+    .hero-content { gap: 2.5rem; }
+    .hero-badge {
+      display: grid;
+      grid-template-columns: 6px minmax(0, 1fr);
+      align-items: start;
+      width: 100%;
+      border-radius: 8px;
+    }
+    .hero-badge::before { margin-top: 0.45em; }
+    .hero-title { font-size: 48px; }
+    .hero-sub { max-width: 100%; font-size: 16px; }
+    .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
+    .hero-scroll { display: none; }
+    section { padding: 4rem 1rem; }
+    .skills-grid,
+    .projects-grid,
+    .equipment-grid {
+      grid-template-columns: 1fr;
+    }
+    .contact-inner { padding: 2rem; }
+    .reel-meta { grid-template-columns: 1fr; }
+    .reel-meta div { border-right: 0; border-bottom: 1px solid var(--border); }
+    .reel-meta div:last-child { border-bottom: 0; }
+    footer { flex-direction: column; text-align: center; }
+    body { cursor: auto; }
+    .cursor, .cursor-ring { display: none; }
+  }
+
+  @media (max-width: 480px) {
+    .hero-title { font-size: 43px; }
+    .hero-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+      justify-content: center;
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <div class="nav-logo">daniel.li</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#equipment">Kit</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Book Daniel</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-copy">
+      <div class="hero-badge"><span>UK based freelancer - AI video & production systems</span></div>
+      <h1 class="hero-title">
+        Daniel Li<br><em>Directs stories</em><br>with AI.
+      </h1>
+      <p class="hero-sub">
+        Producer, DoP, creative planner and project manager building commercial video, sports coverage, AI production workflows and digital systems for clients who need clean execution from idea to delivery.
+      </p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn-primary"><span>View Work</span><span>→</span></a>
+        <a href="mailto:mtli215@outlook.com" class="btn-secondary"><span>Get in Touch</span></a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">6+</div>
+          <div class="stat-label">Years PM experience</div>
+        </div>
+        <div>
+          <div class="stat-num">2024</div>
+          <div class="stat-label">NASTA Broadcaster win</div>
+        </div>
+        <div>
+          <div class="stat-num">UK</div>
+          <div class="stat-label">Leeds, Coventry, London</div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="hero-reel" aria-label="Featured work">
+      <a class="reel-frame" href="https://www.youtube.com/watch?v=EA9mTY6aH48" target="_blank" rel="noreferrer">
+        <img src="https://img.youtube.com/vi/EA9mTY6aH48/maxresdefault.jpg" alt="Mindray Animal Medical corporate video thumbnail">
+        <div class="reel-overlay">
+          <div>
+            <div class="reel-kicker">Featured Production</div>
+            <div class="reel-title">Mindray Animal Medical</div>
+          </div>
+          <div class="play-chip">▶</div>
+        </div>
+      </a>
+      <div class="reel-meta">
+        <div>
+          <div class="meta-label">Role</div>
+          <div class="meta-value">Producer / DoP</div>
+        </div>
+        <div>
+          <div class="meta-label">Mode</div>
+          <div class="meta-value">Commercial film</div>
+        </div>
+        <div>
+          <div class="meta-label">Edge</div>
+          <div class="meta-value">AI-assisted pipeline</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</div>
+
+<div class="marquee-wrap">
+  <div class="marquee-track" id="marqueeTrack"></div>
+</div>
+
+<div class="sections-wrap">
+
+<section id="about">
+  <div class="section-label">01 - About</div>
+  <h2 class="section-title">Commercial production<br><em>with systems thinking</em></h2>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>
+        Daniel Li / 李绵泰 is a UK based freelancer with a Bachelor's degree from Durham University and a Master's degree from the University of Warwick. His work spans commercial video, exhibition coverage, sports media, livestream direction and post-production.
+      </p>
+      <p>
+        He guided Durham University's student media PalTV to the 2024 NASTA top honour, Broadcaster of the Year, and has worked with teams and clients including Pico Group, Mindray Animal Medical, Yonex, Durham University, University of Warwick, BUKC and BUCS.
+      </p>
+      <p>
+        The difference is operational: Daniel combines camera craft, project management, AI video workflows, ComfyUI experimentation, Notion systems and UK property media context into one delivery stack.
+      </p>
+    </div>
+    <div class="about-card">
+      <div class="about-card-avatar">DL</div>
+      <h3>Daniel Li</h3>
+      <div class="role">AI Video Producer & Systems Builder</div>
+      <div class="info-row"><span class="info-icon">◎</span> Producer / DoP / Executive Director</div>
+      <div class="info-row"><span class="info-icon">◎</span> Commercial, exhibition and sports video</div>
+      <div class="info-row"><span class="info-icon">◎</span> AI video, ComfyUI and Notion systems</div>
+      <div class="info-row"><span class="info-icon">◎</span> UK real estate media and operations context</div>
+      <div class="info-row"><span class="info-icon">◎</span> mtli215@outlook.com</div>
+    </div>
+  </div>
+</section>
+
+<section id="skills" class="skills-section">
+  <div class="section-label">02 - Skills</div>
+  <h2 class="section-title">What Daniel brings<br><em>to the table</em></h2>
+  <div class="skills-grid">
+    <div class="skill-card">
+      <div class="skill-card-icon">⬡</div>
+      <h4>AI Video & Generative Workflows</h4>
+      <p>Building repeatable production flows with AI previsualisation, ComfyUI, image/video generation, prompt systems and human review gates.</p>
+      <div class="skill-tags">
+        <span class="tag">ComfyUI</span><span class="tag">AI Video</span><span class="tag">Prompting</span><span class="tag">Previs</span><span class="tag">Batch QA</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-icon">◈</div>
+      <h4>Full-Stack AI Product Thinking</h4>
+      <p>Turning AI ideas into usable tools with front-end structure, API logic, automation, agent workflows and clear product constraints.</p>
+      <div class="skill-tags">
+        <span class="tag">React</span><span class="tag">Next.js</span><span class="tag">Python</span><span class="tag">OpenAI</span><span class="tag">RAG</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-icon">◇</div>
+      <h4>Production Direction</h4>
+      <p>Planning visual language, shot coverage, crew workflow and client-facing delivery for commercial events, corporate stories and sports footage.</p>
+      <div class="skill-tags">
+        <span class="tag">Producer</span><span class="tag">DoP</span><span class="tag">Creative Plan</span><span class="tag">Livestream</span><span class="tag">Editing</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-icon">⬙</div>
+      <h4>Notion & Operations Systems</h4>
+      <p>Designing practical Notion workspaces for content pipelines, production planning, property workflows, CRM logic and team handoff.</p>
+      <div class="skill-tags">
+        <span class="tag">Notion</span><span class="tag">CRM</span><span class="tag">SOP</span><span class="tag">Dashboards</span><span class="tag">Automation</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-icon">◉</div>
+      <h4>Real Estate Media Context</h4>
+      <p>Connecting property presentation, lead capture, listing media, UK lettings/sales workflows and Propertymark-aware operational thinking.</p>
+      <div class="skill-tags">
+        <span class="tag">UK Property</span><span class="tag">Listings</span><span class="tag">Propertymark</span><span class="tag">PMS</span><span class="tag">Client Journey</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-card-icon">◬</div>
+      <h4>Project Management</h4>
+      <p>Keeping creative work grounded in scope, schedule, equipment readiness, stakeholder alignment and post-production delivery standards.</p>
+      <div class="skill-tags">
+        <span class="tag">Roadmaps</span><span class="tag">Budgets</span><span class="tag">Crew Ops</span><span class="tag">QA</span><span class="tag">Delivery</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience" class="exp-section">
+  <div class="section-label">03 - Experience</div>
+  <h2 class="section-title">Where Daniel has<br><em>shipped work</em></h2>
+  <div class="exp-timeline">
+    <div class="exp-item">
+      <div class="exp-dot"></div>
+      <div class="exp-date">2025</div>
+      <div class="exp-title">Exhibition & Corporate Video Producer</div>
+      <div class="exp-company">Mindray Animal Medical, Geekbar, Geekvape</div>
+      <div class="exp-desc">Produced exhibition and corporate video coverage across the Netherlands and the United Kingdom, with event-specific storytelling, fast-turnaround media capture and brand-safe deliverables.</div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-dot"></div>
+      <div class="exp-date">2024</div>
+      <div class="exp-title">Producer / DoP / Creative Planner</div>
+      <div class="exp-company">Mindray Animal Medical, USA</div>
+      <div class="exp-desc">Led commercial production work for Mindray Animal Medical, combining planning, camera operation, visual direction and post-production delivery.</div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-dot"></div>
+      <div class="exp-date">2024</div>
+      <div class="exp-title">Student Media Leadership</div>
+      <div class="exp-company">Durham University PalTV</div>
+      <div class="exp-desc">Guided PalTV to win the 2024 NASTA top honour, Broadcaster of the Year, by improving planning, live production standards and team delivery discipline.</div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-dot"></div>
+      <div class="exp-date">Ongoing</div>
+      <div class="exp-title">AI & Digital Systems Builder</div>
+      <div class="exp-company">DL Studio, Notion, ComfyUI, UK property workflows</div>
+      <div class="exp-desc">Builds AI-assisted production workflows, Notion operating systems and property-media processes that turn scattered work into reusable systems.</div>
+    </div>
+  </div>
+</section>
+
+<section id="projects" class="projects-section">
+  <div class="section-label">04 - Selected Work</div>
+  <h2 class="section-title">Video, AI and<br><em>operational systems</em></h2>
+  <div class="projects-grid">
+    <a class="project-card" href="https://www.youtube.com/watch?v=EA9mTY6aH48" target="_blank" rel="noreferrer">
+      <div class="project-media">
+        <img src="https://img.youtube.com/vi/EA9mTY6aH48/maxresdefault.jpg" alt="Mindray Animal Medical USA video thumbnail">
+      </div>
+      <div class="project-body">
+        <div class="project-num">01 / 06</div>
+        <h3>Mindray Animal Medical - USA</h3>
+        <p>Corporate video production built around brand clarity, operational planning, professional camera work and post-production delivery.</p>
+        <div class="project-footer">
+          <span class="tag">Corporate Video</span><span class="tag">Producer</span><span class="tag">DoP</span><span class="tag">2024</span>
+        </div>
+      </div>
+    </a>
+    <a class="project-card" href="https://youtu.be/_kHqyFngHXQ?si=6LW8-qQRGK7QtXeS" target="_blank" rel="noreferrer">
+      <div class="project-media">
+        <img src="https://img.youtube.com/vi/_kHqyFngHXQ/maxresdefault.jpg" alt="Mindray Animal Medical second video thumbnail">
+      </div>
+      <div class="project-body">
+        <div class="project-num">02 / 06</div>
+        <h3>Mindray Animal Medical - Follow-up Film</h3>
+        <p>A continuation of the commercial production package, keeping brand language consistent while giving each edit a focused story arc.</p>
+        <div class="project-footer">
+          <span class="tag">Brand Film</span><span class="tag">Story</span><span class="tag">Edit</span><span class="tag">Delivery</span>
+        </div>
+      </div>
+    </a>
+    <a class="project-card" href="https://youtu.be/1V7488MtTdQ?si=ppl6JS4hPin4wIwD" target="_blank" rel="noreferrer">
+      <div class="project-media">
+        <img src="https://img.youtube.com/vi/1V7488MtTdQ/maxresdefault.jpg" alt="Mindray Animal Medical third video thumbnail">
+      </div>
+      <div class="project-body">
+        <div class="project-num">03 / 06</div>
+        <h3>Mindray Animal Medical - Third Cut</h3>
+        <p>Additional production asset designed for flexible campaign use, with attention to shot rhythm, message hierarchy and clean export workflow.</p>
+        <div class="project-footer">
+          <span class="tag">Campaign Asset</span><span class="tag">Post</span><span class="tag">Motion</span><span class="tag">QA</span>
+        </div>
+      </div>
+    </a>
+    <div class="project-card">
+      <div class="project-body">
+        <div class="project-num">04 / 06</div>
+        <h3>PalTV Broadcast System</h3>
+        <p>Student media leadership and production management contributing to Durham University's PalTV winning NASTA Broadcaster of the Year in 2024.</p>
+        <div class="project-footer">
+          <span class="tag">Broadcast</span><span class="tag">Team Ops</span><span class="tag">Livestream</span><span class="tag">NASTA</span>
+        </div>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-body">
+        <div class="project-num">05 / 06</div>
+        <h3>AI Video Production Pipeline</h3>
+        <p>A repeatable workflow for AI ideation, visual references, prompt systems, ComfyUI testing, sample benchmarking and human approval before batch generation.</p>
+        <div class="project-footer">
+          <span class="tag">ComfyUI</span><span class="tag">Preflight</span><span class="tag">Prompt System</span><span class="tag">Review</span>
+        </div>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-body">
+        <div class="project-num">06 / 06</div>
+        <h3>Property Media & Notion OS</h3>
+        <p>Digital operating system concept for UK real estate media, lead flow, listing content, CRM notes, repeatable SOPs and team handoff.</p>
+        <div class="project-footer">
+          <span class="tag">UK Real Estate</span><span class="tag">Notion</span><span class="tag">CRM</span><span class="tag">Automation</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="equipment" class="equipment-section">
+  <div class="section-label">05 - Production Kit</div>
+  <h2 class="section-title">Camera, glass and<br><em>control systems</em></h2>
+  <div class="equipment-grid">
+    <div class="equipment-card">
+      <h4>Camera Body</h4>
+      <p>Lumix S1H full-frame, Lumix G9 M4/3, Sony ZV-E1 cine-mod, Sony A7C2 full-frame and Godox V1 Pro flash.</p>
+      <div class="equipment-tags">
+        <span class="tag">S1H</span><span class="tag">A7C2</span><span class="tag">ZV-E1</span><span class="tag">G9</span>
+      </div>
+    </div>
+    <div class="equipment-card">
+      <h4>Lens Selection</h4>
+      <p>Sony 16-35, 20-70 G, 70-200 GM2; Sigma 14-24, 28-70, 100-400; Pentax 29mm, Helios 44M-4, Mir-1B cine-mod and 7artisans Spectrum T2.</p>
+      <div class="equipment-tags">
+        <span class="tag">Sony GM</span><span class="tag">Sigma</span><span class="tag">Vintage</span><span class="tag">Cine</span>
+      </div>
+    </div>
+    <div class="equipment-card">
+      <h4>Accessories</h4>
+      <p>DJI RS3, Accsoon wireless video transmit, SmallRig wireless focus system and PD Movie Air 3 LiDAR focus system.</p>
+      <div class="equipment-tags">
+        <span class="tag">DJI RS3</span><span class="tag">Wireless</span><span class="tag">Focus</span><span class="tag">LiDAR</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact-section">
+  <div class="section-label">06 - Contact</div>
+  <div class="contact-inner">
+    <div>
+      <h2 class="contact-title">Let's build<br><em>the next film</em><br>or system.</h2>
+      <p class="contact-sub">
+        Available for commercial video production, event coverage, AI video workflow design, Notion systems and UK property media projects. Content and claims should be reviewed before external publishing.
+      </p>
+    </div>
+    <div class="contact-links">
+      <a href="mailto:mtli215@outlook.com" class="contact-link">
+        <div class="contact-link-icon">✉</div>
+        <div>
+          <div class="contact-link-label">Email</div>
+          <div class="contact-link-value">mtli215@outlook.com</div>
+        </div>
+      </a>
+      <a href="tel:+447519744217" class="contact-link">
+        <div class="contact-link-icon">☎</div>
+        <div>
+          <div class="contact-link-label">Phone / WhatsApp</div>
+          <div class="contact-link-value">+44 7519 744217</div>
+        </div>
+      </a>
+      <a href="#projects" class="contact-link">
+        <div class="contact-link-icon">▶</div>
+        <div>
+          <div class="contact-link-label">Showreel</div>
+          <div class="contact-link-value">Selected video work</div>
+        </div>
+      </a>
+      <a href="https://daniel-li.my.canva.site/portfolio" class="contact-link" target="_blank" rel="noreferrer">
+        <div class="contact-link-icon">↗</div>
+        <div>
+          <div class="contact-link-label">Source Portfolio</div>
+          <div class="contact-link-value">daniel-li.my.canva.site</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <span>© 2026 Daniel Li<span class="footer-dot"> ● </span>AI-assisted draft for review</span>
+  <span>Built for video production<span class="footer-dot"> ● </span>Powered by systems thinking</span>
+</footer>
+
+<script>
+const cursor = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX;
+  my = e.clientY;
+});
+
+function animCursor() {
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  cursorRing.style.left = rx + 'px';
+  cursorRing.style.top = ry + 'px';
+  requestAnimationFrame(animCursor);
+}
+animCursor();
+
+document.querySelectorAll('a, button, .project-card, .skill-card').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width = '18px';
+    cursor.style.height = '18px';
+    cursorRing.style.width = '54px';
+    cursorRing.style.height = '54px';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width = '10px';
+    cursor.style.height = '10px';
+    cursorRing.style.width = '36px';
+    cursorRing.style.height = '36px';
+  });
+});
+
+const marqueeItems = [
+  'AI Video', 'ComfyUI', 'Producer', 'DoP', 'Creative Planning', 'Project Management',
+  'React', 'Next.js', 'Python', 'OpenAI API', 'RAG', 'Agents', 'Notion Systems',
+  'UK Real Estate', 'Propertymark Context', 'Commercial Video', 'Sports Media',
+  'Livestream', 'Drone / Gimbal', 'Post Production'
+];
+
+const track = document.getElementById('marqueeTrack');
+const doubled = [...marqueeItems, ...marqueeItems];
+doubled.forEach((item, i) => {
+  const el = document.createElement('span');
+  el.className = 'marquee-item';
+  el.innerHTML = item + (i < doubled.length - 1 ? '<span class="dot"></span>' : '');
+  track.appendChild(el);
+});
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.skill-card, .project-card, .exp-item, .equipment-card').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(24px)';
+  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>

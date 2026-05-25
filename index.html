@@ -1133,12 +1133,35 @@
   }
 
   .node-card:hover {
-    border-color: rgba(29,78,216,0.5);
     transform: translateY(-4px);
-    box-shadow:
-      0 14px 44px -12px rgba(29,78,216,0.25),
-      0 4px 12px -4px rgba(0,0,0,0.3);
     z-index: 2;
+  }
+
+  /* Per-color node-card glow — Plan=blue, Exec=purple, Escalate=amber */
+  .node-card[data-step="01"]:hover {
+    border-color: rgba(77,163,255,0.5);
+    box-shadow: 0 14px 44px -12px rgba(77,163,255,0.25), 0 4px 12px -4px rgba(0,0,0,0.3);
+  }
+  .node-card[data-step="02"]:hover {
+    border-color: rgba(167,139,250,0.5);
+    box-shadow: 0 14px 44px -12px rgba(167,139,250,0.25), 0 4px 12px -4px rgba(0,0,0,0.3);
+  }
+  .node-card[data-step="03"]:hover {
+    border-color: rgba(245,158,11,0.5);
+    box-shadow: 0 14px 44px -12px rgba(245,158,11,0.25), 0 4px 12px -4px rgba(0,0,0,0.3);
+  }
+  /* Board cards (architecture row) — 1st=blue, 2nd=purple, 3rd=amber */
+  .system-flow .node-card:nth-child(1):hover {
+    border-color: rgba(77,163,255,0.5);
+    box-shadow: 0 14px 44px -12px rgba(77,163,255,0.25), 0 4px 12px -4px rgba(0,0,0,0.3);
+  }
+  .system-flow .node-card:nth-child(2):hover {
+    border-color: rgba(167,139,250,0.5);
+    box-shadow: 0 14px 44px -12px rgba(167,139,250,0.25), 0 4px 12px -4px rgba(0,0,0,0.3);
+  }
+  .system-flow .node-card:nth-child(3):hover {
+    border-color: rgba(245,158,11,0.5);
+    box-shadow: 0 14px 44px -12px rgba(245,158,11,0.25), 0 4px 12px -4px rgba(0,0,0,0.3);
   }
 
   .system-flow .node-card {
@@ -1229,14 +1252,6 @@
       0 12px 40px -10px rgba(29,78,216,0.22),
       0 4px 12px -4px rgba(0,0,0,0.3);
     z-index: 2;
-  }
-
-  .stat-card strong {
-    display: block;
-    color: var(--text);
-    font-family: var(--serif);
-    font-size: 30px;
-    line-height: 1;
   }
 
   .stat-card span {
@@ -1846,35 +1861,43 @@
     100% { transform: translateY(-50%); }
   }
 
-  /* DeepSeek module numbers — breathing + hover scale */
-  @keyframes breathe {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.03); }
+  /* Module numbers — breathing glow + hover scale */
+  @keyframes breathe-blue {
+    0%, 100% { transform: scale(1); text-shadow: 0 0 0 rgba(77,163,255,0); }
+    50% { transform: scale(1.04); text-shadow: 0 0 18px rgba(77,163,255,0.35); }
+  }
+  @keyframes breathe-purple {
+    0%, 100% { transform: scale(1); text-shadow: 0 0 0 rgba(167,139,250,0); }
+    50% { transform: scale(1.04); text-shadow: 0 0 18px rgba(167,139,250,0.35); }
+  }
+  @keyframes breathe-amber {
+    0%, 100% { transform: scale(1); text-shadow: 0 0 0 rgba(245,158,11,0); }
+    50% { transform: scale(1.04); text-shadow: 0 0 18px rgba(245,158,11,0.35); }
   }
   .module-number {
     display: inline-block;
     font-family: var(--serif);
-    font-size: 28px;
+    font-size: 36px;
     line-height: 1;
-    animation: breathe 3s ease-in-out infinite;
     transition: color 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     cursor: default;
+  }
+  .module-number[data-color="blue"] {
+    color: var(--accent);
+    animation: breathe-blue 3s ease-in-out infinite;
+  }
+  .module-number[data-color="purple"] {
+    color: var(--purple);
+    animation: breathe-purple 3s ease-in-out infinite;
+  }
+  .module-number[data-color="amber"] {
+    color: #f59e0b;
+    animation: breathe-amber 3s ease-in-out infinite;
   }
   .module-number:hover {
     animation-play-state: paused;
     transform: scale(1.18);
-  }
-  .module-number[data-color="blue"]:hover { color: var(--accent); }
-  .module-number[data-color="purple"]:hover { color: var(--purple); }
-  .module-number[data-color="amber"]:hover { color: #f59e0b; }
-
-  .stat-card strong {
-    display: inline-block;
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
-  }
-  .stat-card:hover strong {
-    transform: scale(1.15);
-    color: var(--accent);
+    text-shadow: 0 0 24px currentColor;
   }
 
   /* Model matrix card hover glow — three-color */
@@ -2326,9 +2349,9 @@
     </div>
 
     <div class="system-stats">
-      <div class="stat-card"><strong>30亿+</strong><span>tokens · 4万+请求</span></div>
-      <div class="stat-card"><strong>98.7%</strong><span>DeepSeek V4 命中率</span></div>
-      <div class="stat-card"><strong>8+</strong><span>模型家族</span></div>
+      <div class="stat-card"><span class="module-number" data-color="blue">30亿+</span><span>tokens · 4万+请求</span></div>
+      <div class="stat-card"><span class="module-number" data-color="purple">98.7%</span><span>DeepSeek V4 命中率</span></div>
+      <div class="stat-card"><span class="module-number" data-color="amber">8+</span><span>模型家族</span></div>
     </div>
   </section>
 
@@ -2456,7 +2479,7 @@
         </div>
         <div class="model-card" data-color="blue" style="padding:0.75rem;border:1px solid var(--border);border-radius:12px;border-left:3px solid var(--accent);display:flex;flex-direction:column;gap:0.5rem;">
           <div style="display:flex;align-items:center;gap:0.5rem;">
-            <img src="assets/gemini-logo.svg" class="model-logo" alt="Gemini">
+            <img src="assets/gemini-color.svg" class="model-logo" alt="Gemini">
             <div style="font-size:13px;font-weight:600;">Gemini</div>
           </div>
           <div style="font-size:11px;color:var(--text-3);">跨家族终审 · Veo 3.1 + Imagen 4</div>
