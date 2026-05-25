@@ -1902,6 +1902,10 @@
   .stat-card .module-number {
     font-size: 48px;
   }
+  @media (max-width: 767px) {
+    .stat-card .module-number { font-size: 36px; }
+    .module-number { font-size: 32px; }
+  }
   .module-number:hover {
     animation-play-state: paused;
     transform: scale(1.18);
@@ -2067,7 +2071,9 @@
     section { padding: 4rem 1rem; }
     .contact-inner {
       text-align: center;
-      padding: 0;
+      padding: 2rem 1.5rem;
+      max-width: 100%;
+      border-radius: 20px;
     }
 
     .contact-links {
