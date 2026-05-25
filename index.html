@@ -597,7 +597,16 @@
     font-size: 34px;
     color: var(--text);
     line-height: 1;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
   }
+
+  .hero-stats > div:hover .stat-num {
+    transform: scale(1.15);
+  }
+  .hero-stats > div:nth-child(1):hover .stat-num { color: var(--accent); }
+  .hero-stats > div:nth-child(2):hover .stat-num { color: var(--purple); }
+  .hero-stats > div:nth-child(3):hover .stat-num { color: #f59e0b; }
+  .hero-stats > div:nth-child(4):hover .stat-num { color: var(--accent); }
 
   .stat-label {
     color: var(--text-3);
@@ -984,7 +993,7 @@
   .role-tag {
     margin-bottom: 1.25rem;
     color: var(--accent);
-    font-family: 'Smiley Sans', var(--mono);
+    font-family: var(--mono);
     font-size: 12px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -997,7 +1006,6 @@
     padding: 0.7rem 0;
     border-bottom: 1px solid var(--border);
     color: var(--text-2);
-    font-family: 'Smiley Sans', var(--sans);
     font-size: 15px;
   }
 
@@ -1718,6 +1726,7 @@
     background: oklch(1 0 0 / 0.04);
     color: var(--text);
     text-decoration: none;
+    font-family: 'Smiley Sans', var(--sans);
     font-size: 13px;
     white-space: nowrap;
     box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.06);
@@ -1876,6 +1885,17 @@
     flex-shrink: 0;
   }
   .model-card:hover .model-logo { opacity: 1; }
+
+  /* MiMo logo: add subtle bg for visibility on both themes */
+  .model-logo[alt="MiMo"] {
+    height: 18px;
+    padding: 2px 4px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 4px;
+  }
+  [data-theme="light"] .model-logo[alt="MiMo"] {
+    background: rgba(0,0,0,0.05);
+  }
 
   /* Module card (DeepSeek + Model Matrix wrappers) hover glow */
   .module-card:hover {
@@ -2356,7 +2376,7 @@
               <span style="font-family:var(--serif);font-size:32px;color:var(--accent);">¥195</span>
               <span style="font-family:var(--mono);font-size:11px;color:var(--text-3);">self-hosted total</span>
             </div>
-            <div style="color:var(--text-2);font-size:13px;line-height:1.7;">DeepSeek V4 Pro ¥173 (19.8B tokens · ¥8.74/亿) + Flash ¥22 (0.5B tokens · ¥43.08/亿)。Prefix Cache 命中率 98.7%，混合单价 ¥9.58/亿 token。</div>
+            <div style="color:var(--text-2);font-size:13px;line-height:1.7;">DeepSeek V4 Pro ¥173 (19.8B tokens · ¥8.74/亿) + Flash ¥22 (最高16路并发)。Prefix Cache 命中率 98.7%，混合单价 ¥9.58/亿 token。</div>
           </div>
           <div>
             <div style="display:flex;align-items:baseline;gap:0.5rem;margin-bottom:0.5rem;">
@@ -2403,28 +2423,28 @@
         </div>
         <div class="model-card" data-color="amber" style="padding:0.75rem;border:1px solid var(--border);border-radius:12px;border-left:3px solid #f59e0b;display:flex;flex-direction:column;gap:0.5rem;">
           <div style="display:flex;align-items:center;gap:0.5rem;">
-            <svg class="model-logo" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#6366F1"/><text x="12" y="16" text-anchor="middle" fill="white" font-size="12" font-weight="bold" font-family="sans-serif">GLM</text></svg>
+            <img src="assets/glm-logo.svg" class="model-logo" alt="GLM">
             <div style="font-size:13px;font-weight:600;">GLM-5V-Turbo</div>
           </div>
           <div style="font-size:11px;color:var(--text-3);">审美判断 · 品牌色审计</div>
         </div>
         <div class="model-card" data-color="amber" style="padding:0.75rem;border:1px solid var(--border);border-radius:12px;border-left:3px solid #f59e0b;display:flex;flex-direction:column;gap:0.5rem;">
           <div style="display:flex;align-items:center;gap:0.5rem;">
-            <svg class="model-logo" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="4" fill="#6900FF"/><text x="12" y="16" text-anchor="middle" fill="white" font-size="11" font-weight="bold" font-family="sans-serif">Q</text></svg>
+            <img src="assets/qwen-logo.png" class="model-logo" alt="Qwen">
             <div style="font-size:13px;font-weight:600;">Qwen3-VL 4B</div>
           </div>
           <div style="font-size:11px;color:var(--text-3);">OCR · 空间分析 · Ollama本地</div>
         </div>
         <div class="model-card" data-color="blue" style="padding:0.75rem;border:1px solid var(--border);border-radius:12px;border-left:3px solid var(--accent);display:flex;flex-direction:column;gap:0.5rem;">
           <div style="display:flex;align-items:center;gap:0.5rem;">
-            <svg class="model-logo" viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 3a2 2 0 110 4 2 2 0 010-4zm-3 5.5a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm6 0a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm-5.5 4a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z" fill="#1A73E8"/></svg>
+            <img src="assets/gemini-logo.svg" class="model-logo" alt="Gemini">
             <div style="font-size:13px;font-weight:600;">Gemini</div>
           </div>
           <div style="font-size:11px;color:var(--text-3);">跨家族终审 · Veo 3.1 + Imagen 4</div>
         </div>
         <div class="model-card" data-color="purple" style="padding:0.75rem;border:1px solid var(--border);border-radius:12px;border-left:3px solid var(--purple);display:flex;flex-direction:column;gap:0.5rem;">
           <div style="display:flex;align-items:center;gap:0.5rem;">
-            <svg class="model-logo" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#10A37F"/><path d="M8 12a4 4 0 118 0 4 4 0 01-8 0z" fill="white"/></svg>
+            <img src="assets/openai-logo.svg" class="model-logo" alt="OpenAI">
             <div style="font-size:13px;font-weight:600;">Codex (GPT-5.3)</div>
           </div>
           <div style="font-size:11px;color:var(--text-3);">图生图 · 产品保真</div>
