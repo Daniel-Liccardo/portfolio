@@ -1629,31 +1629,45 @@
     margin: 3rem auto 0;
     padding: 3rem 2.5rem;
     text-align: center;
-    border-radius: 16px;
+    border-radius: 28px;
+    background:
+      linear-gradient(135deg, rgba(77,163,255,0.06) 0%, rgba(167,139,250,0.04) 50%, rgba(245,158,11,0.03) 100%),
+      linear-gradient(105deg, oklch(1 0 0 / 0.06) 0%, oklch(1 0 0 / 0.015) 40%, oklch(1 0 0 / 0.04) 100%);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid oklch(1 0 0 / 0.12);
     box-shadow:
-      0 4px 24px rgba(0,0,0,0.4),
-      0 0 0 1px var(--border),
-      0 0 80px -20px rgba(77,163,255,0.18);
+      0 8px 32px rgba(0,0,0,0.3),
+      0 0 80px -20px rgba(77,163,255,0.15),
+      inset 0 1px 0 rgba(255,255,255,0.08),
+      inset 0 -1px 0 rgba(255,255,255,0.04);
   }
 
   .contact-inner::after {
     content: '';
     position: absolute;
     inset: 0;
-    border-radius: 16px;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    border-radius: 28px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
     pointer-events: none;
   }
 
   [data-theme="light"] .contact-inner {
+    background:
+      linear-gradient(135deg, rgba(77,163,255,0.08) 0%, rgba(167,139,250,0.05) 50%, rgba(245,158,11,0.04) 100%),
+      linear-gradient(105deg, oklch(0.99 0 0 / 0.55) 0%, oklch(0.97 0 0 / 0.35) 40%, oklch(1 0 0 / 0.5) 100%);
+    backdrop-filter: blur(24px) saturate(1.6);
+    -webkit-backdrop-filter: blur(24px) saturate(1.6);
+    border: 1px solid oklch(0.95 0 0 / 0.5);
     box-shadow:
-      0 4px 20px rgba(0,0,0,0.08),
-      0 0 0 1px var(--border),
-      0 0 60px -15px rgba(77,163,255,0.15);
+      0 8px 32px rgba(0,0,0,0.08),
+      0 0 60px -15px rgba(77,163,255,0.12),
+      inset 0 1px 0 rgba(255,255,255,0.7),
+      inset 0 -1px 0 rgba(255,255,255,0.3);
   }
 
   [data-theme="light"] .contact-inner::after {
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
   }
 
   .cert-list {
@@ -1861,65 +1875,55 @@
     100% { transform: translateY(-50%); }
   }
 
-  /* Module numbers — breathing glow + hover scale */
-  @keyframes breathe-blue {
-    0%, 100% { transform: scale(1); text-shadow: 0 0 0 rgba(77,163,255,0); }
-    50% { transform: scale(1.04); text-shadow: 0 0 18px rgba(77,163,255,0.35); }
-  }
-  @keyframes breathe-purple {
-    0%, 100% { transform: scale(1); text-shadow: 0 0 0 rgba(167,139,250,0); }
-    50% { transform: scale(1.04); text-shadow: 0 0 18px rgba(167,139,250,0.35); }
-  }
-  @keyframes breathe-amber {
-    0%, 100% { transform: scale(1); text-shadow: 0 0 0 rgba(245,158,11,0); }
-    50% { transform: scale(1.04); text-shadow: 0 0 18px rgba(245,158,11,0.35); }
+  /* Module numbers — breathing glow + color cycle + hover scale */
+  @keyframes breathe-cycle {
+    0%, 100% { transform: scale(1); text-shadow: 0 0 0 rgba(77,163,255,0); color: var(--accent); }
+    33% { transform: scale(1.04); text-shadow: 0 0 20px rgba(167,139,250,0.4); color: var(--purple); }
+    66% { transform: scale(1.04); text-shadow: 0 0 20px rgba(245,158,11,0.4); color: #f59e0b; }
   }
   .module-number {
     display: inline-block;
     font-family: var(--serif);
-    font-size: 36px;
+    font-size: 42px;
     line-height: 1;
-    transition: color 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation: breathe-cycle 8s ease-in-out infinite;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     cursor: default;
   }
-  .module-number[data-color="blue"] {
-    color: var(--accent);
-    animation: breathe-blue 3s ease-in-out infinite;
-  }
-  .module-number[data-color="purple"] {
-    color: var(--purple);
-    animation: breathe-purple 3s ease-in-out infinite;
-  }
-  .module-number[data-color="amber"] {
-    color: #f59e0b;
-    animation: breathe-amber 3s ease-in-out infinite;
+  .stat-card .module-number {
+    font-size: 48px;
   }
   .module-number:hover {
     animation-play-state: paused;
     transform: scale(1.18);
-    text-shadow: 0 0 24px currentColor;
+    text-shadow: 0 0 28px currentColor;
   }
 
-  /* Model matrix card hover glow — three-color */
+  /* Unified card hover — node-card, model-card, all small cards */
+  .node-card,
   .model-card {
     transition: transform 0.35s cubic-bezier(0.2, 0, 0, 1),
                 box-shadow 0.35s cubic-bezier(0.2, 0, 0, 1),
                 border-color 0.35s;
   }
+  .node-card:hover,
   .model-card:hover {
-    transform: translateY(-4px) scale(1.02);
+    transform: translateY(-5px) scale(1.02);
   }
+  .node-card[data-glow="blue"]:hover,
   .model-card[data-color="blue"]:hover {
     border-color: rgba(77,163,255,0.5);
-    box-shadow: 0 0 30px rgba(77,163,255,0.22), 0 8px 28px -8px rgba(77,163,255,0.18);
+    box-shadow: 0 0 28px rgba(77,163,255,0.22), 0 8px 28px -8px rgba(77,163,255,0.18);
   }
+  .node-card[data-glow="purple"]:hover,
   .model-card[data-color="purple"]:hover {
     border-color: rgba(167,139,250,0.5);
-    box-shadow: 0 0 30px rgba(167,139,250,0.22), 0 8px 28px -8px rgba(167,139,250,0.18);
+    box-shadow: 0 0 28px rgba(167,139,250,0.22), 0 8px 28px -8px rgba(167,139,250,0.18);
   }
+  .node-card[data-glow="amber"]:hover,
   .model-card[data-color="amber"]:hover {
     border-color: rgba(245,158,11,0.5);
-    box-shadow: 0 0 30px rgba(245,158,11,0.22), 0 8px 28px -8px rgba(245,158,11,0.18);
+    box-shadow: 0 0 28px rgba(245,158,11,0.22), 0 8px 28px -8px rgba(245,158,11,0.18);
   }
 
   .model-logo {
@@ -1940,6 +1944,9 @@
   }
 
   /* Module card (DeepSeek + Model Matrix wrappers) hover glow */
+  .module-card {
+    transition: transform 0.4s cubic-bezier(0.2,0,0,1), box-shadow 0.4s, border-color 0.3s;
+  }
   .module-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 0 30px rgba(77,163,255,0.12), 0 12px 40px -10px rgba(0,0,0,0.25);
@@ -2331,17 +2338,17 @@
 
     <!-- Architecture Cards — 统一三色风格 -->
     <div class="system-flow" style="grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-bottom:2rem;">
-      <div class="node-card" style="padding:1.5rem;border-left:3px solid var(--accent);">
+      <div class="node-card" data-glow="blue" style="padding:1.5rem;border-left:3px solid var(--accent);">
         <div style="font-size:22px;margin-bottom:0.75rem;">📐</div>
         <div class="node-title">分层指令</div>
         <div class="node-note">71 行常驻 + 领域按需加载。旧版 234 行全量注入，每轮上下文消耗大幅减少。</div>
       </div>
-      <div class="node-card" style="padding:1.5rem;border-left:3px solid var(--purple);">
+      <div class="node-card" data-glow="purple" style="padding:1.5rem;border-left:3px solid var(--purple);">
         <div style="font-size:22px;margin-bottom:0.75rem;">🧠</div>
         <div class="node-title">Memory 路由</div>
         <div class="node-note">43 个记忆文件按关键词触发加载。跨 session 知识不丢失，新 session 自动继承。</div>
       </div>
-      <div class="node-card" style="padding:1.5rem;border-left:3px solid #f59e0b;">
+      <div class="node-card" data-glow="amber" style="padding:1.5rem;border-left:3px solid #f59e0b;">
         <div style="font-size:22px;margin-bottom:0.75rem;">🔄</div>
         <div class="node-title">交叉审计</div>
         <div class="node-note">出图 → 审计 → 迭代 → 终审。谁产出谁不审自己，消除同源偏差。</div>
@@ -2350,7 +2357,7 @@
 
     <div class="system-stats">
       <div class="stat-card"><span class="module-number" data-color="blue">30亿+</span><span>tokens · 4万+请求</span></div>
-      <div class="stat-card"><span class="module-number" data-color="purple">98.7%</span><span>DeepSeek V4 命中率</span></div>
+      <div class="stat-card"><span class="module-number" data-color="purple">99%+</span><span>缓存命中率</span></div>
       <div class="stat-card"><span class="module-number" data-color="amber">8+</span><span>模型家族</span></div>
     </div>
   </section>
@@ -2361,17 +2368,17 @@
 
     <!-- Local Multimodal — 三色风格 -->
     <div class="system-flow" style="grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-bottom:2rem;">
-      <div class="node-card" style="padding:1.5rem;border-left:3px solid var(--accent);">
+      <div class="node-card" data-glow="blue" style="padding:1.5rem;border-left:3px solid var(--accent);">
         <div style="font-size:22px;margin-bottom:0.75rem;">🎙️</div>
         <div class="node-title">mlx-whisper</div>
         <div class="node-note">Apple Silicon 本地音频转写。零 API 成本，10MB 约 40 秒。</div>
       </div>
-      <div class="node-card" style="padding:1.5rem;border-left:3px solid var(--purple);">
+      <div class="node-card" data-glow="purple" style="padding:1.5rem;border-left:3px solid var(--purple);">
         <div style="font-size:22px;margin-bottom:0.75rem;">🎨</div>
         <div class="node-title">GLM-5V + Qwen3-VL</div>
         <div class="node-note">视觉审美判断、品牌色审计、OCR 和空间分析。本地 + 云端双链路。</div>
       </div>
-      <div class="node-card" style="padding:1.5rem;border-left:3px solid #f59e0b;">
+      <div class="node-card" data-glow="amber" style="padding:1.5rem;border-left:3px solid #f59e0b;">
         <div style="font-size:22px;margin-bottom:0.75rem;">📁</div>
         <div class="node-title">Pillow + NumPy</div>
         <div class="node-note">本地图像处理：清晰度(Laplacian方差)+曝光+对比度加权评分挑片，EXIF时间聚类分场景，零API成本</div>
@@ -2382,7 +2389,7 @@
     <div class="module-card" style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;margin-bottom:2rem;transition:transform 0.4s cubic-bezier(0.2,0,0,1),box-shadow 0.4s,border-color 0.3s;cursor:default;">
       <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;">
         <img src="assets/deepseek-logo.png" alt="DeepSeek" style="height:22px;">
-        <span style="font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-3);">DeepSeek V4 命中率 · May 2026</span>
+        <span style="font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-3);">DeepSeek × MiMo V2.5 · Token Usage</span>
       </div>
 
       <!-- 产出展示 -->
@@ -2403,9 +2410,9 @@
           <div style="color:var(--text-2);font-size:12px;margin-top:0.25rem;">2.5 小时 · 零错误 · 多平台交付</div>
         </div>
         <div style="text-align:center;">
-          <div class="module-number" data-color="blue">77.6s</div>
-          <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-3);margin-top:0.3rem;">成片时长</div>
-          <div style="color:var(--text-2);font-size:12px;margin-top:0.25rem;">四阶段管线 · 四层审计</div>
+          <div class="module-number" data-color="blue">¥255</div>
+          <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-3);margin-top:0.3rem;">MiMo 总成本</div>
+          <div style="color:var(--text-2);font-size:12px;margin-top:0.25rem;">V2.5 ¥183 + Pro ¥72 · 省 ¥1000+</div>
         </div>
       </div>
 
@@ -2415,10 +2422,10 @@
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
           <div>
             <div style="display:flex;align-items:baseline;gap:0.5rem;margin-bottom:0.5rem;">
-              <span style="font-family:var(--serif);font-size:32px;color:var(--accent);">¥195</span>
+              <span style="font-family:var(--serif);font-size:32px;color:var(--accent);">¥450</span>
               <span style="font-family:var(--mono);font-size:11px;color:var(--text-3);">self-hosted total</span>
             </div>
-            <div style="color:var(--text-2);font-size:13px;line-height:1.7;">DeepSeek V4 Pro ¥173 (19.8B tokens · ¥8.74/亿) + Flash ¥22 (最高16路并发)。Prefix Cache 命中率 98.7%，混合单价 ¥9.58/亿 token。</div>
+            <div style="color:var(--text-2);font-size:13px;line-height:1.7;">DS V4 Pro ¥173 + Flash ¥22 + MiMo V2.5 ¥183 + Pro ¥72 = ¥450。高缓存命中率节省超 ¥1000。MiMo Token Plan $44/月，仅用 1/3。</div>
           </div>
           <div>
             <div style="display:flex;align-items:baseline;gap:0.5rem;margin-bottom:0.5rem;">
