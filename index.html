@@ -1846,6 +1846,28 @@
     100% { transform: translateY(-50%); }
   }
 
+  /* DeepSeek module numbers — breathing + hover scale */
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+  }
+  .module-number {
+    display: inline-block;
+    font-family: var(--serif);
+    font-size: 28px;
+    line-height: 1;
+    animation: breathe 3s ease-in-out infinite;
+    transition: color 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: default;
+  }
+  .module-number:hover {
+    animation-play-state: paused;
+    transform: scale(1.18);
+  }
+  .module-number[data-color="blue"]:hover { color: var(--accent); }
+  .module-number[data-color="purple"]:hover { color: var(--purple); }
+  .module-number[data-color="amber"]:hover { color: #f59e0b; }
+
   .stat-card strong {
     display: inline-block;
     transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.3s ease;
@@ -1886,15 +1908,12 @@
   }
   .model-card:hover .model-logo { opacity: 1; }
 
-  /* MiMo logo: add subtle bg for visibility on both themes */
+  /* MiMo logo: black bg for visibility on both themes */
   .model-logo[alt="MiMo"] {
     height: 18px;
-    padding: 2px 4px;
-    background: rgba(255,255,255,0.08);
+    padding: 3px 6px;
+    background: #000;
     border-radius: 4px;
-  }
-  [data-theme="light"] .model-logo[alt="MiMo"] {
-    background: rgba(0,0,0,0.05);
   }
 
   /* Module card (DeepSeek + Model Matrix wrappers) hover glow */
@@ -2339,29 +2358,29 @@
     <!-- Token → 产出 → 成本 对比 -->
     <div class="module-card" style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;margin-bottom:2rem;transition:transform 0.4s cubic-bezier(0.2,0,0,1),box-shadow 0.4s,border-color 0.3s;cursor:default;">
       <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;">
-        <img src="assets/deepseek-logo.png" alt="DeepSeek" style="height:22px;filter:grayscale(1) brightness(0.7);">
+        <img src="assets/deepseek-logo.png" alt="DeepSeek" style="height:22px;">
         <span style="font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-3);">DeepSeek V4 命中率 · May 2026</span>
       </div>
 
       <!-- 产出展示 -->
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.75rem;">
         <div style="text-align:center;">
-          <div style="font-family:var(--serif);font-size:28px;color:var(--accent);">5+</div>
+          <div class="module-number" data-color="blue">5+</div>
           <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-3);margin-top:0.3rem;">AI 视频项目</div>
           <div style="color:var(--text-2);font-size:12px;margin-top:0.25rem;">产品视频 · 品牌影片 · 展会纪录</div>
         </div>
         <div style="text-align:center;">
-          <div style="font-family:var(--serif);font-size:28px;color:var(--purple);">96+</div>
+          <div class="module-number" data-color="purple">96+</div>
           <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-3);margin-top:0.3rem;">KOL 数据库</div>
           <div style="color:var(--text-2);font-size:12px;margin-top:0.25rem;">竞品挖掘 · 协议标注 · 地域分析</div>
         </div>
         <div style="text-align:center;">
-          <div style="font-family:var(--serif);font-size:28px;color:#f59e0b;">228</div>
+          <div class="module-number" data-color="amber">228</div>
           <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-3);margin-top:0.3rem;">素材批处理</div>
           <div style="color:var(--text-2);font-size:12px;margin-top:0.25rem;">2.5 小时 · 零错误 · 多平台交付</div>
         </div>
         <div style="text-align:center;">
-          <div style="font-family:var(--serif);font-size:28px;color:var(--accent);">77.6s</div>
+          <div class="module-number" data-color="blue">77.6s</div>
           <div style="font-family:var(--mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-3);margin-top:0.3rem;">成片时长</div>
           <div style="color:var(--text-2);font-size:12px;margin-top:0.25rem;">四阶段管线 · 四层审计</div>
         </div>
