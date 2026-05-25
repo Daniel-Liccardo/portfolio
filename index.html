@@ -1809,6 +1809,59 @@
     }
   }
 
+  /* Matrix scrolling code background */
+  .matrix-bg::before {
+    content: '01001101 10110010 01110101 11001010 Plan Exec Escalate 01001000 10101100 01101001 11100101 DeepSeek MiMo Gemini Codex GLM Qwen 0x4F72 0x6578 0x6563 01110000 10101010 01010101 Plan Exec Escalate DeepSeek MiMo Gemini Codex 01001101 10110010 01110101 11001010 01001000 10101100 01101001 11100101 0x4F72 0x6578 0x6563 01110000 10101010 01010101 01001101 10110010 01110101 11001010 Plan Exec Escalate 01001000 10101100 01101001 11100101 DeepSeek MiMo Gemini Codex GLM Qwen 0x4F72 0x6578 0x6563 01110000 10101010 01010101 Plan Exec Escalate DeepSeek MiMo Gemini Codex 01001101 10110010 01110101 11001010 01001000 10101100 01101001 11100101 0x4F72 0x6578 0x6563 01110000 10101010 01010101 01001101 10110010 01110101 11001010 Plan Exec Escalate 01001000 10101100 01101001 11100101 DeepSeek MiMo Gemini Codex GLM Qwen 0x4F72 0x6578 0x6563 01110000 10101010 01010101';
+    position: absolute;
+    inset: 0;
+    font-family: var(--mono);
+    font-size: 11px;
+    line-height: 1.8;
+    color: var(--accent);
+    opacity: 0.04;
+    overflow: hidden;
+    word-break: break-all;
+    animation: matrix-scroll 60s linear infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes matrix-scroll {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
+  }
+
+  .stat-card strong {
+    display: block;
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+  .stat-card:hover strong {
+    transform: scale(1.12);
+  }
+
+  /* Model matrix card hover glow */
+  .model-card {
+    transition: transform 0.35s cubic-bezier(0.2, 0, 0, 1),
+                box-shadow 0.35s cubic-bezier(0.2, 0, 0, 1),
+                border-color 0.35s;
+  }
+  .model-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px -10px rgba(77,163,255,0.18), 0 4px 12px -4px rgba(0,0,0,0.3);
+  }
+  .model-card[data-color="blue"]:hover {
+    border-color: rgba(77,163,255,0.35);
+    box-shadow: 0 0 20px rgba(77,163,255,0.15), 0 8px 24px -8px rgba(77,163,255,0.12);
+  }
+  .model-card[data-color="purple"]:hover {
+    border-color: rgba(167,139,250,0.35);
+    box-shadow: 0 0 20px rgba(167,139,250,0.15), 0 8px 24px -8px rgba(167,139,250,0.12);
+  }
+  .model-card[data-color="amber"]:hover {
+    border-color: rgba(245,158,11,0.35);
+    box-shadow: 0 0 20px rgba(245,158,11,0.15), 0 8px 24px -8px rgba(245,158,11,0.12);
+  }
+
   @media (max-width: 1500px) {
     .title-tail { display: block; }
   }
@@ -2168,7 +2221,7 @@
     </div>
   </section>
 
-  <section id="system" style="background:linear-gradient(180deg, rgba(246,243,236,0.03) 0%, transparent 100%);position:relative;">
+  <section id="system" class="matrix-bg" style="background:linear-gradient(180deg, rgba(246,243,236,0.03) 0%, transparent 100%);position:relative;overflow:hidden;">
     <div class="section-label" data-i18n="system.label">02 — 智能体平台</div>
     <h2 class="section-title"><span data-i18n="system.title1">多智能体</span><br><em data-i18n="system.title2">编排平台</em></h2>
     <p style="color:var(--text-2);font-size:15px;line-height:1.85;max-width:680px;margin-bottom:2.5rem;" data-i18n="system.intro">模型无关的编排系统。Plan → Exec → Escalate 三层路由，跨模型交叉审计，本地多模态补盲。灵感来自 Karpathy Skills 项目和 Harness Engineering 理念——不是写更好的 prompt，而是构建约束 AI 行为的 harness。</p>
@@ -2235,9 +2288,9 @@
         <div class="node-note">视觉审美判断、品牌色审计、OCR 和空间分析。本地 + 云端双链路。</div>
       </div>
       <div class="node-card" style="padding:1.5rem;border-left:3px solid #f59e0b;">
-        <div style="font-size:22px;margin-bottom:0.75rem;">📷</div>
+        <div style="font-size:22px;margin-bottom:0.75rem;">📁</div>
         <div class="node-title">Pillow + NumPy</div>
-        <div class="node-note">照片自动挑片：清晰度 + 曝光 + 对比度加权评分，纯本地零成本。</div>
+        <div class="node-note">本地图像处理：清晰度(Laplacian方差)+曝光+对比度加权评分挑片，EXIF时间聚类分场景，零API成本</div>
       </div>
     </div>
 
@@ -2281,7 +2334,7 @@
               <span style="font-family:var(--serif);font-size:32px;color:var(--accent);">¥195</span>
               <span style="font-family:var(--mono);font-size:11px;color:var(--text-3);">self-hosted total</span>
             </div>
-            <div style="color:var(--text-2);font-size:13px;line-height:1.7;">DeepSeek V4 Pro ¥173 + Flash ¥22。Prefix Cache 命中率 98.7%，实际单价低至 ¥0.025/百万 token。</div>
+            <div style="color:var(--text-2);font-size:13px;line-height:1.7;">DeepSeek V4 Pro ¥173 (19.8B tokens · ¥8.74/亿) + Flash ¥22 (0.5B tokens · ¥43.08/亿)。Prefix Cache 命中率 98.7%，混合单价 ¥9.58/亿 token。</div>
           </div>
           <div>
             <div style="display:flex;align-items:baseline;gap:0.5rem;margin-bottom:0.5rem;">
@@ -2294,49 +2347,49 @@
       </div>
     </div>
 
-    <!-- 模型矩阵 — 更多模型 -->
+    <!-- 模型矩阵 — 8模型家族 -->
     <div style="background:var(--bg-2);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem;margin-bottom:2rem;">
       <div style="font-family:var(--mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-3);margin-bottom:1.25rem;">Model Matrix · 8+ 模型家族</div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;">
-        <div style="padding:0.75rem;border:1px solid var(--border);border-radius:12px;border-left:3px solid var(--accent);">
+        <div class="model-card" data-color="blue" style="padding:0.75rem;border:1px solid var(--border);border-radius:12px;border-left:3px solid var(--accent);">
           <div style="font-family:var(--mono);font-size:11px;color:var(--accent);margin-bottom:0.25rem;">Plan</div>
-          <div style="font-size:13px;font-weight:600;">DeepSeek V4 Pro</div>
-          <div style="font-size:11px;color:var(--text-3);">19.8B tokens · 98.7% hit</div>
+          <div style="font-size:13px;font-weight:600;display:flex;align-items:center;gap:0.4rem;"><img src="assets/deepseek-logo.png" alt="DeepSeek" style="height:14px;opacity:0.6;">DeepSeek V4 Pro</div>
+          <div style="font-size:11px;color:var(--text-3);">¥8.74/亿 · 256K ctx · 深度推理</div>
         </div>
-        <div style="padding:0.75rem;border:1px solid var(--border);border-radius:12px;border-left:3px solid var(--accent);">
+        <div class="model-card" data-color="blue" style="padding:0.75rem;border:1px solid var(--border);border-radius:12px;border-left:3px solid var(--accent);">
           <div style="font-family:var(--mono);font-size:11px;color:var(--accent);margin-bottom:0.25rem;">Plan</div>
           <div style="font-size:13px;font-weight:600;">MiMo V2.5 Pro</div>
-          <div style="font-size:11px;color:var(--text-3);">Token Plan · 256K ctx</div>
+          <div style="font-size:11px;color:var(--text-3);">Token Plan · 原生多模态 · tool_use + thinking</div>
         </div>
-        <div style="padding:0.75rem;border:1px solid var(--border);border-radius:12px;border-left:3px solid var(--purple);">
+        <div class="model-card" data-color="purple" style="padding:0.75rem;border:1px solid var(--border);border-radius:12px;border-left:3px solid var(--purple);">
           <div style="font-family:var(--mono);font-size:11px;color:var(--purple);margin-bottom:0.25rem;">Exec</div>
-          <div style="font-size:13px;font-weight:600;">DeepSeek V4 Flash</div>
-          <div style="font-size:11px;color:var(--text-3);">0.5B tokens · 64.8% hit</div>
+          <div style="font-size:13px;font-weight:600;display:flex;align-items:center;gap:0.4rem;"><img src="assets/deepseek-logo.png" alt="DeepSeek" style="height:14px;opacity:0.6;">DeepSeek V4 Flash</div>
+          <div style="font-size:11px;color:var(--text-3);">¥43.08/亿 · 轻量执行</div>
         </div>
-        <div style="padding:0.75rem;border:1px solid var(--border);border-radius:12px;border-left:3px solid var(--purple);">
+        <div class="model-card" data-color="purple" style="padding:0.75rem;border:1px solid var(--border);border-radius:12px;border-left:3px solid var(--purple);">
           <div style="font-family:var(--mono);font-size:11px;color:var(--purple);margin-bottom:0.25rem;">Exec</div>
           <div style="font-size:13px;font-weight:600;">MiMo V2.5 / V2-Omni</div>
-          <div style="font-size:11px;color:var(--text-3);">tool_use · thinking</div>
+          <div style="font-size:11px;color:var(--text-3);">全模态输入 · 本地+云端</div>
         </div>
-        <div style="padding:0.75rem;border:1px solid var(--border);border-radius:12px;border-left:3px solid #f59e0b;">
+        <div class="model-card" data-color="amber" style="padding:0.75rem;border:1px solid var(--border);border-radius:12px;border-left:3px solid #f59e0b;">
           <div style="font-family:var(--mono);font-size:11px;color:#f59e0b;margin-bottom:0.25rem;">Visual</div>
           <div style="font-size:13px;font-weight:600;">GLM-5V-Turbo</div>
           <div style="font-size:11px;color:var(--text-3);">审美判断 · 品牌色审计</div>
         </div>
-        <div style="padding:0.75rem;border:1px solid var(--border);border-radius:12px;border-left:3px solid #f59e0b;">
+        <div class="model-card" data-color="amber" style="padding:0.75rem;border:1px solid var(--border);border-radius:12px;border-left:3px solid #f59e0b;">
           <div style="font-family:var(--mono);font-size:11px;color:#f59e0b;margin-bottom:0.25rem;">Visual</div>
           <div style="font-size:13px;font-weight:600;">Qwen3-VL 4B</div>
-          <div style="font-size:11px;color:var(--text-3);">OCR · 空间分析 · 本地</div>
+          <div style="font-size:11px;color:var(--text-3);">OCR · 空间分析 · Ollama本地</div>
         </div>
-        <div style="padding:0.75rem;border:1px solid var(--border);border-radius:12px;border-left:3px solid var(--accent);">
+        <div class="model-card" data-color="blue" style="padding:0.75rem;border:1px solid var(--border);border-radius:12px;border-left:3px solid var(--accent);">
           <div style="font-family:var(--mono);font-size:11px;color:var(--accent);margin-bottom:0.25rem;">Audit</div>
           <div style="font-size:13px;font-weight:600;">Gemini</div>
-          <div style="font-size:11px;color:var(--text-3);">跨家族终审</div>
+          <div style="font-size:11px;color:var(--text-3);">跨家族终审 · 视频管线(Veo 3.1 + Imagen 4)</div>
         </div>
-        <div style="padding:0.75rem;border:1px solid var(--border);border-radius:12px;border-left:3px solid var(--purple);">
+        <div class="model-card" data-color="purple" style="padding:0.75rem;border:1px solid var(--border);border-radius:12px;border-left:3px solid var(--purple);">
           <div style="font-family:var(--mono);font-size:11px;color:var(--purple);margin-bottom:0.25rem;">Gen</div>
           <div style="font-size:13px;font-weight:600;">Codex (GPT-5.3)</div>
-          <div style="font-size:11px;color:var(--text-3);">出图 · 图生图</div>
+          <div style="font-size:11px;color:var(--text-3);">图生图 · 产品保真</div>
         </div>
       </div>
     </div>
